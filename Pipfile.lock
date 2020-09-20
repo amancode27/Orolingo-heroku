@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "342f53b6a28ad4ac4c4a08118f29af3fb644b26931c9ff17fbbf47d8ef7e764b"
+            "sha256": "df11625b0224ac7d847128b86465f473c8180ce21e97513071f05060f9bc522b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -155,6 +155,13 @@
             "index": "pypi",
             "version": "==3.4.0"
         },
+        "django-decouple": {
+            "hashes": [
+                "sha256:a7f4b4d1eaedde3a7d1a8e0489dae4afa96cff3eb575d569d92d9ba5f4283f90"
+            ],
+            "index": "pypi",
+            "version": "==2.1"
+        },
         "django-oauth-toolkit": {
             "hashes": [
                 "sha256:28508f83385ab4313936ddedfb310eaa8a1dcb737153d2956383ce47e75c2fab",
@@ -302,6 +309,13 @@
             "index": "pypi",
             "version": "==2.8.1"
         },
+        "python-decouple": {
+            "hashes": [
+                "sha256:55c546b85b0c47a15a47a4312d451a437f7344a9be3e001660bccd93b637de95"
+            ],
+            "index": "pypi",
+            "version": "==3.3"
+        },
         "python-mimeparse": {
             "hashes": [
                 "sha256:76e4b03d700a641fd7761d3cd4fdbbdcd787eade1ebfac43f877016328334f78",
@@ -377,6 +391,14 @@
             "index": "pypi",
             "version": "==0.3.1"
         },
+        "stripe": {
+            "hashes": [
+                "sha256:67f9887ac80411a43fc0d20680760b10bd06506f03df0b7fade284d97ffa2bcf",
+                "sha256:ed0e58eeb2f154c7165225e64059145c7e0bd0a31607112f494db41e51effe7c"
+            ],
+            "index": "pypi",
+            "version": "==2.51.0"
+        },
         "typed-ast": {
             "hashes": [
                 "sha256:0666aa36131496aed8f7be0410ff974562ab7eeac11ef351def9ea6fa28f6355",
@@ -401,7 +423,7 @@
                 "sha256:fc0fea399acb12edbf8a628ba8d2312f583bdbdb3335635db062fa98cf71fca4",
                 "sha256:fe460b922ec15dd205595c9b5b99e2f056fd98ae8f9f56b888e7a17dc2b757e7"
             ],
-            "markers": "implementation_name == 'cpython' and python_version < '3.8'",
+            "markers": "python_version < '3.8' and implementation_name == 'cpython'",
             "version": "==1.4.1"
         },
         "urllib3": {

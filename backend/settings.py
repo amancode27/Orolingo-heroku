@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import datetime
-
+from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -209,11 +209,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 
-#Stripe
-
-
-STRIPE_PUBLIC_KEY = 'pk_test_51HPYCmEIFPCEHoD2IMgEmOaX06T2UyqNeciajMsPeWvsIR5vFDa0cdwAtz9uX5Pirpz62Hm6yPEnVK5D96jdUmYn00LWR0LkhW' 
-STRIPE_SECRET_KEY = 'sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7gF5ZxPurYWqILsnQGWv4W5LszhwnAj1OWocHoT00gkFTx5Ak'
+STRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY') 
+STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
 # Media config
 
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
