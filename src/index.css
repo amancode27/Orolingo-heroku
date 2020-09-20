@@ -1,0 +1,25 @@
+:root {
+  --color-primary: rgb(10, 3, 102);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+}
+
+.button-standard {
+  padding: 0.5rem 1rem;
+  background-color: bisque;
+  text-decoration: none;
+  font-size: 2rem;
+  border-radius: 200px;
+  color: var(--color-primary);
+}
