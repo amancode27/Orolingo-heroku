@@ -67,7 +67,7 @@ const App = (props) => {
             .catch((error) => {
                 console.log(error);
                 setLoading(false);
-                setError("Incorrect Credentials");
+                setError("Incorrect Credential");
                 document.getElementById("login-form-error").textContent =
                     "Invalid Credentials";
                 // if(error.response.status === 401)
