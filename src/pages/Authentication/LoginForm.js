@@ -188,7 +188,7 @@ const LoginForm = (props) =>{
                 callback={(response) => props.handleSocialLogin(response, 'facebook', props.history.push)}
               />
               <GoogleLogin
-                clientId="459086212681-76d4i3recuslqf1juh4vt86mbngqou6c.apps.googleusercontent.com"
+                clientId="101030816509-7hcrjilke8aeckv7d5a09gh8ird3dbme.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={(response) => props.handleSocialLogin(response, 'google-oauth2', props.history.push)}
                 onFailure={(response) => props.handleSocialLogin(response, 'google-oauth2', props.history.push)}

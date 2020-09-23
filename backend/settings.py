@@ -135,9 +135,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 CORS_ORIGIN_WHITELIST = (
-    'https://localhost:8000', 
+    'http://localhost:8000', 
     'http://localhost:3000'
+    
 )
+
+# CORS_ORIGIN_ALLOW_ALL = True
 
 
 STATIC_URL = '/static/'
@@ -177,11 +180,11 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "459086212681-76d4i3recuslqf1juh4vt86mbngqou6c.apps.googleusercontent.com"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "ArBV45YaKhIRbwJfrlQrgRFa"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "101030816509-7hcrjilke8aeckv7d5a09gh8ird3dbme.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "b1CEZFxjQwR2THrV4Z0mshd0"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.apis.com/auth/userinfo.profile',
 ]
 
 JWT_AUTH = {
