@@ -232,6 +232,7 @@ const StudentDashboard = props => {
       .then((res) => {
         const languagestolearn = res.data.languages_to_learn;
         setStudentName(res.data.user.fullname)
+        console.log(res)
         languagestolearn.forEach((e) => {
           axios.get(`${basename}${e}`).then((res) =>
             setLanguagesToLearn((prev) => {
@@ -331,6 +332,7 @@ const StudentDashboard = props => {
           <Grid item xs={12}>
           <h1 className="display-2">
             Hello! {studentName} 
+            console.log(studentName)
           </h1>
           </Grid>
           <hr className="my-2" />
