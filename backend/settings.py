@@ -143,7 +143,6 @@ CORS_ORIGIN_WHITELIST = (
 # CORS_ORIGIN_ALLOW_ALL = True
 
 
-STATIC_URL = '/static/'
 
 
 
@@ -219,7 +218,7 @@ STRIPE_PUBLIC_KEY = 'pk_test_51HPYCmEIFPCEHoD2IMgEmOaX06T2UyqNeciajMsPeWvsIR5vFD
 STRIPE_SECRET_KEY = 'sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7gF5ZxPurYWqILsnQGWv4W5LszhwnAj1OWocHoT00gkFTx5Ak'
 # Media config
 
-MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'build', 'media')
 MEDIA_URL= "/media/"
 
 
