@@ -1,7 +1,7 @@
 # backend/urls.py
 
 from django.contrib import admin
-from django.urls import path, include                 # add this
+from django.urls import path, include, re_path                 # add this
 # from core import views, urls                            # add
 from django.contrib.auth import views as auth_views
 from rest_framework_jwt.views import obtain_jwt_token  # added for jwts
@@ -37,6 +37,9 @@ urlpatterns = [
     path('api/', include(user_resource.urls)),
     path('api/', include(language_resource.urls)),
     path('api/', include(feedback.urls)),
+    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    
+
 #     path('api/', include(language_trainer.urls)),
     # path('api/auth/oauth/', include('rest_framework_social_oauth2.urls')),
     path('reset_password/',
