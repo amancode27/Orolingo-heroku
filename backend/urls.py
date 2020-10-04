@@ -1,14 +1,13 @@
 # backend/urls.py
 
 from django.contrib import admin
-from django.urls import path, include,re_path                 # add this
+from django.urls import path, include                 # add this
 # from core import views, urls                            # add
 from django.contrib.auth import views as auth_views
 from rest_framework_jwt.views import obtain_jwt_token  # added for jwts
 from django.conf import settings
 from core.resources import *
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
 
 
 user_resource = UserResource()
@@ -17,7 +16,7 @@ trainer_resource = TrainerResource()
 course_resource = CourseResource()
 assignment_resource = AssignmentResource()
 student_assignment_resource = StudentAssignmentResource() 
-note_resource =  NoteResource()
+note_resource = NoteResource()
 student_course_resource = StudentCourseResource()
 language_resource = LanguageResource()
 feedback = FeedbackResource()
@@ -55,7 +54,6 @@ urlpatterns = [
     path('reset_password_complete/',
          auth_views.PasswordResetCompleteView.as_view(),
          name="password_reset_complete"),
-    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
 
 
 ]

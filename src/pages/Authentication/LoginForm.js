@@ -3,6 +3,7 @@ import FacebookLogin from "react-facebook-login";
 import { GoogleLogin } from "react-google-login";
 import { FormErrors } from './FormError';
 
+import Fade from 'react-reveal/Fade';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -117,6 +118,8 @@ const LoginForm = (props) =>{
 
 
   return (
+    
+    <Fade left>
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -188,7 +191,7 @@ const LoginForm = (props) =>{
                 callback={(response) => props.handleSocialLogin(response, 'facebook', props.history.push)}
               />
               <GoogleLogin
-                clientId="101030816509-7hcrjilke8aeckv7d5a09gh8ird3dbme.apps.googleusercontent.com"
+                clientId="459086212681-76d4i3recuslqf1juh4vt86mbngqou6c.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={(response) => props.handleSocialLogin(response, 'google-oauth2', props.history.push)}
                 onFailure={(response) => props.handleSocialLogin(response, 'google-oauth2', props.history.push)}
@@ -213,6 +216,7 @@ const LoginForm = (props) =>{
         </div>
       </Grid>
     </Grid>
+    </Fade>
   );
 }
 export default LoginForm

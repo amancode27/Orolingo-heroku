@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Navbar from "./../Home/Navbar";
+import NavBar from "./../Home/Navbar";
 import Login from "./Login";
 import Signup from "./Signup";
 import Landing from "../Home/Landing";
@@ -20,6 +20,7 @@ import TrainerUpload from "../Teachers/TrainerUpload"
 import TrainerCourses from "../Teachers/TrainerCourses";
 import EditCourse from "../Teachers/EditCourse";
 import ChatApp from "../Teachers/ChatApp";
+import Feedback from '../Teachers/feedback';
 
 const Router = (props) => {
     const handleLogin = props.handleLogin;
@@ -37,7 +38,7 @@ const Router = (props) => {
 
     return (
         <BrowserRouter basename='/'>
-            <Navbar />
+            <NavBar {...props} {...userinfo} handleLogout={handleLogout}/>
             <Switch>
                 <Route
                     exact
@@ -143,6 +144,14 @@ const Router = (props) => {
                     )}
                 />
 
+                <Route
+                    exact
+                    path='/dashboard/trainercourses/feedback/:id'
+                    render = {(props) => (
+                        <Feedback {...props} {...userinfo} />
+                    )}
+                />
+                
                 <Route
                     path='/language-trainers/:languageid'
                     render={(props) => (

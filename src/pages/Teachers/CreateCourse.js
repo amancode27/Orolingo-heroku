@@ -4,10 +4,23 @@ import axios from "axios";
 import { Col,Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import '../style/CreateCourse.css';
 import { Redirect } from "react-router";
+import useFullPageLoader from '../../Components/FullPageLoader/useFullPageLoader.js';
 
 const CreateCourse = (props) =>{
     const [courseDetails,setCourseDetails] = useState({});
     const [redirect,setRedirect] = useState(false);
+    const [languages,setLanguages] = useState([]);
+    const [loader,showLoader,hideLoader] = useFullPageLoader();
+
+    useEffect(()=>{
+        axios.get(`${basename}/api/language`)
+        .then(res =>{
+            setLanguages(res.data.objects);
+        })
+    },[props])
+    
+    console.log(languages);
+
     const changeField = (e) =>{
         const field = e.target.name;
         const value = e.target.value;
@@ -16,9 +29,11 @@ const CreateCourse = (props) =>{
         })
     }
     const submitForm = () =>{
+        showLoader();
         const user_id = props.userId;
         axios.get(`${basename}/api/trainer/?user=${user_id}`)
              .then(res1=>{
+                 hideLoader();
                  axios.get(`${basename}/api/language/?name=${courseDetails['language']}`)
                       .then(res2=>{
                             if(!res2.data.objects.length){
@@ -31,6 +46,7 @@ const CreateCourse = (props) =>{
                                                 "language":res3.data.objects[0],
                                                 "name":courseDetails['name'],
                                                 "trainer":res1.data.objects[0],
+                                                "cost":courseDetails['cost'],
                                                 "startdate":courseDetails['startdate'] ,
                                                 "enddate": courseDetails['enddate'],
                                                 "description":courseDetails['description'],
@@ -44,6 +60,7 @@ const CreateCourse = (props) =>{
                                     "language":res2.data.objects[0],
                                     "name":courseDetails['name'],
                                     "trainer":res1.data.objects[0],
+                                    "cost":courseDetails['cost'],
                                     "startdate":courseDetails['startdate'] ,
                                     "enddate": courseDetails['enddate'],
                                     "description":courseDetails['description'],
@@ -65,8 +82,27 @@ const CreateCourse = (props) =>{
                     <Input type="text" name="name" id="courseName" placeholder="Enter a course name" bsSize="lg" onChange={changeField}/>
                 </FormGroup>
                 <FormGroup>
+                    
                     <Label for="language">Language</Label>
-                    <Input type="text" name="language" id="language" placeholder="Enter the language" size="lg" onChange={changeField}/>
+                    
+                    <Input 
+                        type="text" 
+                        name="language" 
+                        id="language" 
+                        placeholder="Enter the language" 
+                        size="lg" 
+                        list="languagename" 
+                        onChange={changeField}
+                    />
+                    {/* <select 
+                        onChange={changeField}
+                        name="language" 
+                        value="language"
+                    >
+                    {languages.map(e=>{
+                        <option value={e.name}>{e.name}</option>
+                    })}        
+                    </select>  */}
                 </FormGroup>
                 <FormGroup>
                     <Label for="startDate">Start Date</Label>
@@ -91,11 +127,16 @@ const CreateCourse = (props) =>{
                     />
                 </FormGroup>
                 <FormGroup>
+                    <Label for="cost">Purchase Amount</Label>
+                    <Input type="text" name="cost" id="cost" placeholder="Enter the purchase amount" size="lg" onChange={changeField}/>
+                </FormGroup>
+                <FormGroup>
                     <Label for="description">Course Description</Label>
                     <Input type="textarea" name="description" id="description" bsSize="lg" onChange={changeField}/>
                 </FormGroup>
                 <Button size="lg" onClick={submitForm}>Submit</Button>
             </Form>
+            {loader}
         </div>
     );
 }

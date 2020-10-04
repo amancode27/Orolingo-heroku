@@ -1,39 +1,58 @@
-## Introduction
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-This is a language learning platform named Orolingo
+## Available Scripts
 
-## Requirements
-* Python3
-* Pipenv
+In the project directory, you can run:
 
-## Getting started
+### `npm start`
 
-1. Navigate into the diretory ```[cd backend]```
-2. Source the virtual environment ```[pipenv shell]```
-3. Install the dependencies ```[pipenv install]```
-4. Navigate into the frontend directory ```[cd frontend]```
-5. Install the dependencies ```[npm install]```
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Run the application
-You will need two terminals pointed to the frontend and backend directories to start the servers for this application.
-1. Download the xampp server and run apache and sql then always run the command ```[python manage.py migrate]``` after pulling commits from git in backend folder to migrate the database
-2. If the migration doesn't happen the run  ```[localhost/phpmyadmin]``` on the browser and create a blank database named 'orolingo' then run the command ```[python manage.py migrate]``` in backend folder to migrate the database .
-3. Run this command to start the backend server in the ```[backend]``` directory: ```[python manage.py runserver]``` (You have to run this command while you are sourced into the virtual environment)
-4. Run this command to start the frontend development server in the ```[frontend]``` directory: ```[npm run start]``` (This will start the frontend on the adddress [localhost:3000](http://localhost:3000))
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
+### `npm test`
 
-## Built With
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-* [React](https://reactjs.org) - A progressive JavaScript framework.
-* [Python](https://www.python.org/) - A programming language that lets you work quickly and integrate systems more effectively.
-* [Django](http://djangoproject.org/) - A high-level Python Web framework that encourages rapid development and clean, pragmatic design.
+### `npm run build`
 
-## Django JWTS use
-* pipenv install django
-* pipenv install djangorestframework
-* pipenv install djangorestframework-jwt
-* pipenv install django-cors-headers
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## Others 
-* pip install django-rest-framework-social-oauth2
-* pip install django-tastypie
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Frontend Documentation
+## NPM packages
+* *axios* (for api calls)
+* *react-facebook-login*
+* *react-google-login*
+* *react-router* & *react-router-dom*
+* *reactstrap*
+
+##Functions
+* *handleSignup*: triggered when signup button pressed.This takes the form data and posts it to *localhost:8000/auth/users* and the received token is stored in localhost while the user details in state
+* *handleLogin*: triggered when login button pressed. This takes the form data and posts it to *localhost:8000/token-auth* and the received token is stored in localhost while the user details in state
+* *handleSocialLogin*: triggered on pressing either of the social login button, the user presses the authorize button, an access token is received which is send as body to the backend api *localhost:8000/auth/oauth/login/* which executes the social login view in django
+* *handleSocialTrainerStudent*: triggered if the first time user logs in with his social account to stop the process and ask if he is a student or a teacher

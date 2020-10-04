@@ -143,9 +143,6 @@ CORS_ORIGIN_WHITELIST = (
 # CORS_ORIGIN_ALLOW_ALL = True
 
 
-
-
-
 REST_FRAMEWORK = { #added this
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -201,6 +198,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
 )
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
 #SMTP Configuration #forgot password
 
@@ -220,14 +218,13 @@ STRIPE_SECRET_KEY = 'sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7
 
 
 MEDIA_URL= "/media/"
-
-
+MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SITE_ID = 1

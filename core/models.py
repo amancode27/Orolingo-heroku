@@ -81,7 +81,6 @@ class StudentCourse(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     completed_percent = models.IntegerField(default=0)
-    purchased = models.BooleanField(default=False)
     # startdate = models.DateField(auto_now_add=True)
     # enddate = models.DateField(null=True)
 
@@ -93,6 +92,7 @@ class Assignment(models.Model):
     topic = models.CharField(max_length=500, null=True)
     description = models.TextField(null=True)
     created_at = models.DateField(auto_now_add=True,null=True)
+    deadline = models.DateField(null=True)
     pdf = models.FileField(null=True,blank=True)
     # def __str__(self):
     #     return self.course
@@ -144,7 +144,7 @@ class Zoom(models.Model):
 
 class Forum(models.Model):
     title = models.CharField(max_length=30)
-    description = models.CharField(max_length=200)
+    description = models.TextField(max_length=1000)
     creator = models.CharField(max_length=50, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     student_course = models.ForeignKey(StudentCourse, on_delete=models.CASCADE,null = True)
@@ -155,12 +155,3 @@ class Forum(models.Model):
     def __str__(self):
         return self.title
 
-
-class Payment(models.Model):
-    stripe_charge_id = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    amount = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.fullname

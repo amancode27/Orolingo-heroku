@@ -6,6 +6,7 @@ import axios from "axios";
 import {
     CardTitle,
     CardText,
+    Row,
     Col,
     Jumbotron,
   } from "reactstrap";
@@ -23,24 +24,29 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { mainListItems, secondaryListItems } from './listItems';
+import {mainListItems}  from './listItems';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import { mdiAccountVoice, mdiDelete } from '@mdi/js';
+import Icon from '@mdi/react';
+import TextField from '@material-ui/core/TextField';
+import useFullPageLoader from '../../Components/FullPageLoader/useFullPageLoader.js';
+import { Bounce, Slide, Zoom } from 'react-awesome-reveal';
 
 const CourseContent = (props,user) =>{
     
       const student_course_id = props.match.params['id'];
       const preventDefault = (event) => event.preventDefault();
-      console.log(props.match.params["course"]);
+      //console.log(props.match.params["course"]);
 
+      const [loader, showLoader, hideLoader] = useFullPageLoader();
       const [courseName, setCourseName] = useState("");
       const [forumData, setForumData] = useState([]);
       const [title, setTitle] = useState("");
@@ -53,7 +59,7 @@ const CourseContent = (props,user) =>{
     setOpen(false);
   };
 
-  const drawerWidth = 240;
+  const drawerWidth = 150;
 
       const useStyles = makeStyles((theme) => ({
         root: {
@@ -84,15 +90,15 @@ const CourseContent = (props,user) =>{
           }),
         },
         appBarShift: {
-          marginLeft: drawerWidth,
-          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: '150%',
+          width: `calc(100% - 150px)`,
           transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
         },
         menuButton: {
-          marginRight: 36,
+          marginRight: 5,
         },
         menuButtonHidden: {
           display: 'none',
@@ -103,7 +109,7 @@ const CourseContent = (props,user) =>{
         drawerPaper: {
           position: 'relative',
           whiteSpace: 'nowrap',
-          width: drawerWidth,
+          width: '240px',
           transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -147,6 +153,12 @@ const CourseContent = (props,user) =>{
         media: {
           height: 140,
         },
+        discuss : {
+          '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+          },
+        },
       }));
 
       const classes = useStyles();
@@ -162,8 +174,10 @@ const CourseContent = (props,user) =>{
       }
       const discuss = (e) => {
         e.preventDefault();
+        showLoader();
         axios.get(`${basename}/api/student_course/${student_course_id}`)
              .then(res=>{
+               hideLoader();
                 axios.post(`${basename}/auth/api/forum/create/`,{
                   "title" : title,
                   "description" : description,
@@ -172,7 +186,6 @@ const CourseContent = (props,user) =>{
                   "student" : props.userId
                 })
                 .then((res) => {
-                  
                   axios.get(`${basename}/auth/api/forum?student_course=${student_course_id}`)
                   .then((res) => {
                   setForumData(res.data); 
@@ -182,16 +195,36 @@ const CourseContent = (props,user) =>{
         setDescription("");
       }
 
-    useEffect(() => {       
+      const deleteF = (e) => {
+       // e.preventDefault();
+       let delId = e.id;
+        console.log(delId);
+          axios.delete(`${basename}/auth/api/forum/${delId}/delete`)
+          .then((res) => {
+            showLoader();
+            axios.
+              get(`${basename}/auth/api/forum?student_course=${student_course_id}`)
+              .then((res1) => {
+                hideLoader();
+                const tmp = res1.data.objects;
+                setForumData(res1.data); 
+              });
+            })
+      }
+
+    useEffect(() => {
+      showLoader();       
       axios.
       get(`${basename}/auth/api/forum?student_course=${student_course_id}`)
       .then((res) => {
+        hideLoader();
         const tmp = res.data.objects;
         setForumData(res.data); 
       });
 
       axios.get(`${basename}/api/student_course/${student_course_id}`)
       .then((res) =>{
+        hideLoader();
         setCourseName(res.data.course.name);
       });
 
@@ -210,7 +243,7 @@ const CourseContent = (props,user) =>{
             open={open}
           >
             <div className={classes.toolbarIcon}>
-              <IconButton onClick={handleDrawerClose}>
+              <IconButton onClick={handleDrawerClose} className={clsx(classes.menuButton, !open && classes.menuButtonHidden)}>
                 <ChevronLeftIcon />
               </IconButton>
               <IconButton
@@ -226,102 +259,82 @@ const CourseContent = (props,user) =>{
             <Divider />
             <List>{mainListItems}</List>
             <Divider />
-            <List>{secondaryListItems}</List>
           </Drawer>
           <React.Fragment className={classes.content}>
-          <Jumbotron>
+          
+          <Container maxWidth="md" className = "mt-5">
           <Grid>
             <Grid item xs={12}>
-              <h1 className="display-2">
+              <h1 className="display-2 text-center">
               {courseName} 
               </h1>
-            </Grid>
-              <hr className="my-2" />
-            <Grid item xs={12}>
-              <img src="https://source.unsplash.com/200x200/?language" height = "200"/> 
+              <hr/>
             </Grid>
           </Grid>
-          </Jumbotron>
-          <Container className = "mt-5">
             <Grid container spacing = {3}>
               <Grid item xs={12} md={6} lg={6}>
-              <Card className={classes.paper}>
-                  <CardActionArea>
+                <Slide>
+              <CardActionArea>
+              <Card className={classes.paper} style={{fontSize : "13px"}}>
+                  <Link to={`${student_course_id}/assignments`} style={{textDecoration : "none", color: "black"}}>
                     <CardMedia
                       className={classes.media}
-                      image="https://source.unsplash.com/318x180"
+                      image="/assignments.jpg"
                       title="Contemplative Reptile"
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Your Assignments
                       </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
+                      <Typography variant="body1" color="textSecondary" component="p">
                         Your Course Assignments are available here !
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
-                  <CardActions>
-                  <Link to={`${student_course_id}/assignments`}>
-                    <Button size="small" color="primary" variant="contained">
-                      Your Assignments
-                    </Button>
                   </Link>
-                    <Button size="small" color="primary">
-                      Learn More
-                    </Button>
-                  </CardActions>
                 </Card>  
+                </CardActionArea>
+                </Slide>
               </Grid>
               <Grid item xs={12} md={6} lg={6}>
-              <Card className={classes.paper}>
+                <Slide direction="right">
               <CardActionArea>
+              <Card className={classes.paper} style={{fontSize : "13px"}}>
+              <Link to={`${student_course_id}/notes`} style={{textDecoration : "none", color: "black"}}>
                     <CardMedia
                       className={classes.media}
-                      image="https://source.unsplash.com/318x180"
-                      title="Contemplative Reptile"
+                      image="/notes.jpg"
+                      title="dvsdv"
                     />
-                    <CardContent>
+                    <CardContent >
                       <Typography gutterBottom variant="h5" component="h2">
                         Your Notes
                       </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
+                      <Typography variant="body1" color="textSecondary" component="p">
                         Your Notes are available here !
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
-                  <CardActions>
-                  <Link to={`${student_course_id}/notes`}>
-                    <Button size="small" color="primary" variant="contained">
-                      Your Notes
-                    </Button>
-                  </Link>
-                    <Button size="small" color="primary">
-                      Learn More
-                    </Button>
-                  </CardActions>
+                  </Link>               
                 </Card>
+                </CardActionArea>
+                </Slide>
               </Grid>
             </Grid>
             <Grid container spacing = {3}>
               <Grid item xs={12}>
+                <Zoom>
               <Card className={classes.paper}>
                   <Typography gutterBottom variant="h5" component="h2">
                       Live video lectures, Recorded videos, etc here.
                   </Typography>
-              </Card>
-              </Grid>
-            </Grid>
-            <Grid container spacing = {3}>
-              <Grid item xs={12}>
-              <Paper className={classes.paper}>
                   <FeedbackModal {...props} buttonLabel = {"Give Feedback"} className = {"feedback"} />
-              </Paper>
+              </Card>
+              </Zoom>
               </Grid>
             </Grid>
 
           <Grid container spacing={3}>
             <Grid item xs={12}>
+              <Slide direction="up">
               <Paper>
                 <Accordion>
                 <AccordionSummary
@@ -332,66 +345,75 @@ const CourseContent = (props,user) =>{
                   <CardTitle className="text-center mt-3" style={{fontSize:"20px"}}>Discussion Forum </CardTitle>
                   </AccordionSummary>
               <AccordionDetails>
-              <Col md={8}>
-                <div className="commentList">
+                <Row style={{maxHeight : "500px", width: "100%", overflowY : "scroll" }} >
+              <Col md={12} >
+                <div className="commentList" >
                     {forumData.map(k => (
-
-                        <div className="media mb-3">
-                        <img
+                      <div style={{padding : "5px"}}>
+                      <Card variant="outlined" elevation={3}>
+                        <CardActionArea>
+                  
+                        {/* <img
                         className="mr-3 bg-light rounded"
                         width="48"
                         height="48"
                         src={`https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg`}
                         alt="Avatar"
-                        />
-
-                        <div className="media-body p-2 shadow-sm rounded bg-light border">
-                        <p className="float-right text-muted">{timeago.format(k.created_at)} </p>
-                        <h4 className = "mt-0 mb-1 text-muted">{ k.creator } </h4>
-                        <h6 className="mt-1 mb-1 text-muted">{ k.title }</h6>
-                        {k.description}
+                        /> */} 
+                        <Row>
+                          <Col md={1} >
+                            <Icon style={{padding : "10px"}} path = {mdiAccountVoice} size={4} />
+                        </Col>
+                        <Col md={11}>
+                        <CardContent>
+                          <Typography gutterBottom variant="h5" component="h2">
+                          { k.creator } 
+                          <Icon style = {{padding : "10px", display : "flex", float : "right"}} path = { mdiDelete } size = {3} onClick= { () => deleteF(k) } />
+                          </Typography>
+                          <Typography gutterBottom variant="h6" component="h2">
+                          { k.title }
+                          </Typography>
+                          <Typography variant="subtitle1">
+                          {k.description}
+                          </Typography>
+                          <Typography variant="body1"  component="p" style={{float : "right"}}>
+                          {timeago.format(k.created_at)}
+                          </Typography>
+                          
+                        </CardContent>
+                        </Col>
+                        </Row>
+                        </CardActionArea>
+                        </Card>
                         </div>
-                        </div>
-
                     ))}
                 </div>
               </Col>
-              <Col md={4}>
-                  <form >
-                    <div className="form-group">
-                      <input
-                        className="form-control"
-                        placeholder="Title"
-                        name="Title"
-                        type="text"
-                        onChange = {changeTitle}
-                        value = {title}
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <textarea
-                        className="form-control"
-                        placeholder="Details (200 letters)"
-                        name="Description"
-                        rows="5"
-                        onChange = {changeDescription}
-                        value = {description}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <button  className="btn btn-primary" onClick={discuss}>
-                        Discuss &#10148;
-                      </button>
-                    </div>
-                  </form>
+              <Col md={12} style= {{minHeight : "200px"}}>
+              <form className={classes.discuss} style={{fontSize : "25px", color :"black"}} noValidate autoComplete="off">
+                <Grid container spacing = {2} style={{display : "flex", width : "100%"}}>
+                  <Grid item md={5}>
+                  <Icon style={{padding : "10px"}} path = {mdiAccountVoice} size={4} /> <br/>
+                  <TextField id="standard-basic" label="Title" onChange = {changeTitle} value = {title} style={{ width : "100%"}} /> 
+                  </Grid>
+                  <Grid item md={7}>
+                  <TextField  label="Description" variant="outlined" rows={5} onChange = {changeDescription} multiline value = {description} style={{ width : "100%"}} /> <br/>
+                    <Button variant="contained" color="primary" onClick = {discuss} style = {{marginTop: "10px",float : "right"}}>
+                     Discuss &#10148;
+                     </Button>
+                  </Grid>
+                </Grid>
+              </form>
               </Col>
+              </Row>
               </AccordionDetails>
           </Accordion>
               </Paper>
+              </Slide>
             </Grid>
           </Grid>
         </Container>
+        {loader}
         </React.Fragment>
         </div>
     );

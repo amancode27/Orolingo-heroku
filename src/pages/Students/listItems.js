@@ -9,15 +9,21 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import { Link } from 'react-router-dom';
+import List from '@material-ui/core/List';
 
 export const mainListItems = (
-  <div>
+  <div >
+    <Link to="/dashboard" style={{color : "black", textDecoration: "none"}}>
     <ListItem button>
+      
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
+      
     </ListItem>
+    </Link>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />
@@ -36,35 +42,5 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Your Acitivity" />
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Free-Lancing" />
-    </ListItem>
   </div>
-);
-
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Your Submissions</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Your Notes" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Your Assignments" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Your Performance" />
-    </ListItem>
-  </div>
-);
+  );

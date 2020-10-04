@@ -2,8 +2,9 @@
   background :#3f50b5 ;  
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: left;
   padding: 1rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 
   &--link,
   &--link:link,
@@ -11,8 +12,8 @@
     text-decoration: none;
     margin: 0 2.5rem;
     
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 00;
     color: white;
   }
 
@@ -29,5 +30,6 @@
     padding: 0.5rem 2.5rem;
     display: flex;
     align-items: center;
+    margin-top: -5px;
   }
 }

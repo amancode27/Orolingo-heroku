@@ -10,8 +10,6 @@ import {
   CardText,
   Row,
   Col,
-  Button,
-  Progress,
 } from "reactstrap";
 import Chip from '@material-ui/core/Chip';
 import { makeStyles, useTheme  } from '@material-ui/core/styles';
@@ -24,10 +22,10 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Paper from '@material-ui/core/Paper';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { mainListItems, secondaryListItems } from './listItems';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -35,30 +33,54 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+import { blue } from '@material-ui/core/colors'; 
+import Avatar from '@material-ui/core/Avatar';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import { mdiTrophyAward, mdiTrophyOutline } from '@mdi/js';
+import Icon from '@mdi/react';
+import useFullPageLoader from '../../Components/FullPageLoader/useFullPageLoader.js';
+import { Slide } from 'react-awesome-reveal';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import {mainListItems}  from './listItems';
 
 const StudentDashboard = props => {
   const [languagesLearnt, setLanguagesLearnt] = useState({});
   const [languagesToLearn, setLanguagesToLearn] = useState({});
-  const [liveCourses, setLiveCourses] = useState([]);
-  const [pastCourses,setPastCourses] = useState([]);
-  const [upcomingCourses,setUpcomingCourses] = useState([]);
+  const [liveCourses, setLiveCourses] = useState({});
+  const [pastCourses,setPastCourses] = useState({});
+  const [upcomingCourses,setUpcomingCourses] = useState({});
   const [availableLanguages , setavailableLanguages] = useState({});
  // const [buyCourse,setBuyCourse] = useState("");
   const [forumData, setForumData] = useState({});
   const [buyCourse,setBuyCourse] = useState({});
   const [studentName,setStudentName] = useState("");
   const [open, setOpen ] =useState(true);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("Select a language");
 
-  const drawerWidth = 240;
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClose = (value) => {
+    setOpenDialog(false);
+    setSelectedValue(value);
+  };
+  const [loader, showLoader, hideLoader] = useFullPageLoader();
+  // const drawerWidth = [150,240];
 
       const useStyles = makeStyles((theme) => ({
         root: {
@@ -89,15 +111,16 @@ const StudentDashboard = props => {
           }),
         },
         appBarShift: {
-          marginLeft: drawerWidth,
-          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: 150,
+          width: `calc(100% - 240px)`,   
+          // ${""}px
           transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
         },
         menuButton: {
-          marginRight: 36,
+          marginRight: 10,
         },
         menuButtonHidden: {
           display: 'none',
@@ -108,7 +131,7 @@ const StudentDashboard = props => {
         drawerPaper: {
           position: 'relative',
           whiteSpace: 'nowrap',
-          width: drawerWidth,
+          width: "140%",
           transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -142,7 +165,7 @@ const StudentDashboard = props => {
           flexDirection: 'column',
         },
         fixedHeight: {
-          height: 240,
+          height: 200,
         },
         heading: {
           fontSize: theme.typography.pxToRem(15),
@@ -167,6 +190,10 @@ const StudentDashboard = props => {
         playIcon: {
           height: 38,
           width: 38,
+        },
+        avatar: {
+          backgroundColor: blue[100],
+          color: blue[600],
         },
       }));
 
@@ -226,13 +253,54 @@ const StudentDashboard = props => {
       });
   }
 
+  function SimpleDialog(props) {
+
+    const avatars = makeStyles({
+    avatar: {
+      backgroundColor: blue[100],
+      color: blue[600],
+      },
+    });
+    const classes = avatars();
+    const { onClose, selectedValue, open } = props;
+  
+    const handleClose = () => {
+      onClose(selectedValue);
+    };
+  
+    const handleListItemClick = (e) => {
+      onClose(e);
+      console.log(e);
+      setBuyCourse({[e]:availableLanguages[e]});
+    };
+  
+    return (
+      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}  >
+        <DialogTitle id="simple-dialog-title">Select a language </DialogTitle>
+        <List name="select" id="buycourses" onChange = {(e)=>changeCourse(e)} style={{minWidth : "300px"}}>
+            {Object.keys(availableLanguages).map((key,index)=>(
+              <ListItem button onClick= {()=> handleListItemClick(key)}  key={key}>
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  <AddIcon/>
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={key} />
+            </ListItem>
+            ))}
+        </List>
+      </Dialog>
+    );
+  }
+
   useEffect(() => {
+    showLoader();
     axios
       .get(`${basename}/api/student/${props.userId}/`)
       .then((res) => {
+        hideLoader();
         const languagestolearn = res.data.languages_to_learn;
         setStudentName(res.data.user.fullname)
-        console.log(res)
         languagestolearn.forEach((e) => {
           axios.get(`${basename}${e}`).then((res) =>
             setLanguagesToLearn((prev) => {
@@ -248,19 +316,20 @@ const StudentDashboard = props => {
                 const startdate = Date.parse(k.course.startdate);
                 const enddate = Date.parse(k.course.enddate);
                 const curdate = Date.now();
+                
                 if(curdate>=startdate&&curdate<=enddate&&k.completed_percent!=100){
                   setLiveCourses(prev=>{
-                    return [...prev,k];
+                    return {...prev,[k.id]:k};
                   })
                 }
                 else if(curdate>enddate&&k.completed_percent!=100){
                   setPastCourses(prev=>{
-                    return [...prev,k];
+                    return {...prev,[k.id]:k};
                   })
                 }
                 else if(curdate<startdate&&k.completed_percent!=100){
                   setUpcomingCourses(prev=>{
-                    return [...prev,k];
+                    return {...prev,[k.id]:k};
                   })
                 }
               });
@@ -279,9 +348,6 @@ const StudentDashboard = props => {
                 })
              });
            });
-
-
-      
       
       axios.get(`${basename}/api/student_course/?student=${props.userId}&completed_percent=100`)
            .then(res=>{
@@ -295,7 +361,7 @@ const StudentDashboard = props => {
   }, [props]);
   //console.log(studentName);
 
-  
+  console.log(liveCourses);
   return (
     <div className={classes.root}>
       <CssBaseline/>
@@ -307,13 +373,11 @@ const StudentDashboard = props => {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose}
+            className={clsx(classes.menuButton, (!open) &&classes.menuButtonHidden)}>
             <ChevronLeftIcon />
           </IconButton>
           <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
@@ -321,18 +385,17 @@ const StudentDashboard = props => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+          <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        <mainListItems/>
       </Drawer>
       <React.Fragment className={classes.content}>
-      <Jumbotron>
+      {/* <Jumbotron>
         <Grid>
           
           <Grid item xs={12}>
           <h1 className="display-2">
             Hello! {studentName} 
-            console.log(studentName)
           </h1>
           </Grid>
           <hr className="my-2" />
@@ -340,86 +403,102 @@ const StudentDashboard = props => {
           <img src="https://source.unsplash.com/200x200/?student" height = "200"/> 
           </Grid>
         </Grid>
-      </Jumbotron>
-      <Container maxWidth="lg" className={classes.container}>
+      </Jumbotron> */}
+      <Container maxWidth="md" className={classes.container}>
+        <Typography className="text-center" variant="h2" gutterBottom>
+          Hello! {studentName} 
+        </Typography>
+        <hr/>
         <Grid container spacing = {3}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
+            <Grid item xs={12} className="text-center">
+              <Slide direction="down" >
+                
+              <Paper className={classes.paper} >
                 <CardBody>
-                  <Row>
-                    <CardTitle className="ml-3 mr-3">Courses Completed : </CardTitle>
+                    <CardTitle style={{padding: "2px", fontSize : "20px"}}>Courses Completed  
+                    <Icon path={mdiTrophyAward}
+                      title="Completed"
+                      size={3}
+                      horizontal
+                      vertical
+                      rotate={-180}
+                      color="green"
+                      />
+                     </CardTitle>
                     <CardText>
+                      <Container>
                       <Row>
                         {Object.keys(languagesLearnt).map((key, index) => (
                           <div>
                             <Col>
                               <Link to={`/dashboard/courses/coursecontent/${languagesLearnt[key]}`}>
-                                <Button color="success" > {key}</Button>
-                                
+                                <Chip color="primary" style={{fontSize : "13px"}}  label={key} size="lg" clickable icon = {<Icon path = { mdiTrophyOutline} size = {2} color = "white" />}></Chip>
                               </Link>
+                              
                             </Col>
                           </div>
                         ))}
                       </Row>
+                      </Container>
                     </CardText>
-                  </Row>
                 </CardBody>
               </Paper>
+              </Slide>
             </Grid>
 
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Slide direction = "left">
               <Paper className={fixedHeightPaper}>
-                <CardBody>
-                  <Row>
-                    <CardTitle className="text-left mr-3 ml-3">Want to learn:</CardTitle>
-                    <CardText>
+                  <CardBody>
+                    <CardTitle className="text-center" style={{fontSize : "20px" }}>Want to learn</CardTitle>
                       <Row>
                         {Object.keys(languagesToLearn).map((key, index) => (
                           <div>
-                            <Col>
-                              <Chip onDelete={()=>{deleteToLearnLanguage(key)}} label={key}></Chip>
+                            <Col style={{marginTop : "5px"}}>
+                              <Chip onDelete={()=>{deleteToLearnLanguage(key)}} style={{fontSize : "15px"}} label={key}></Chip>
                             </Col>
                           </div>
                         ))}
                       </Row>
-                    </CardText>
-                  </Row>
-                </CardBody>
-                <DropDown availLanguages = {availableLanguages} addToLearnLanguage={addToLearnLanguage}/>
+                      </CardBody>
+                      <div style={{float : "bottom"}}>
+                <DropDown availLanguages = {availableLanguages} addToLearnLanguage={addToLearnLanguage}  /> </div>                
               </Paper>
+              </Slide> 
             </Grid>
 
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Slide direction = "right">
               <Paper className={fixedHeightPaper}>
-                  
                   <Form>
                   <FormGroup>
-                    <Label for="buycourses">Select a language to buy a course</Label>
-                    <Input type="select" name="select" id="buycourses" onChange = {(e)=>changeCourse(e)} size="lg">
-                      <option>Select a language</option>
-                      {Object.keys(availableLanguages).map((key,index)=>(
-                        <option>{key}</option>
-                      ))}
-                    </Input>
+                    <div className="text-center">
+                      <Typography variant="h4" className="text-center">Selected a language to buy a course <br/>
+                      <Chip size="lg" color="primary" style={{float: "unset", fontSize : "15px", marginTop : "20px"}} label={selectedValue} onClick={handleClickOpen} clickable></Chip>
+                      </Typography>
+                      <SimpleDialog selectedValue={selectedValue} open={openDialog} onClose={handleClose} />
+                        <Link style = {{float : "none"}} to={{pathname:`/dashboard/courses/${Object.keys(buyCourse)[0]}`,
+                                  aboutProps:{
+                                      language:buyCourse[Object.keys(buyCourse)[0]],
+                                  }
+                        }}
+                        >
+                          <Chip  variant="outlined" clickable color="primary" style={{ fontSize : "15px" , marginTop : "20px"}} label="View Course" size="lg"></Chip>
+                        </Link>
+                  </div>
                   </FormGroup>
-                  <Link to={{pathname:`/dashboard/courses/${Object.keys(buyCourse)[0]}`,
-                            aboutProps:{
-                                language:buyCourse[Object.keys(buyCourse)[0]],
-                            }
-                  }}
-                  >
-                    <Button size="lg">View Courses</Button>
-                  </Link>
                   </Form>
               </Paper>
+              </Slide>
             </Grid>
 
         </Grid>
 
         <Grid container spacing={3}>
           <Grid item xs={12}>
+            <Slide direction = "up">
             <Paper >
-              <CardTitle className="text-center" style={{fontSize:"20px"}}>Your Courses</CardTitle>
+              <CardTitle className="text-center" style={{fontSize:"20px", padding : "10px"}}>Your Courses</CardTitle>
                 <Accordion>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -428,51 +507,45 @@ const StudentDashboard = props => {
                   >
                   <CardTitle className="text-center" style={{fontSize:"20px"}}>Live Courses</CardTitle>
                   </AccordionSummary>
-                  <AccordionDetails>
-                  <Row>
-                    {liveCourses.map((e) => (
-                      <div>
-                            <Col>
-                            <Card className={classes.root}>
-                                <CardMedia
-                                  className={classes.cover}
-                                  image="https://source.unsplash.com/200x200/?study"
-                                  title="Live from space album cover"
-                                />
-                                <div className={classes.details}>
-                                  <CardContent className={classes.content}>
+                  <AccordionDetails style= {{maxHeight : "500px", overflowY : "scroll"}} className="scrollbar">
+                  <CardBody className="overflow">
+                    {Object.keys(liveCourses).map((e,index) => (
+                      <div style={{padding : "10px"}}>
+                      <CardActionArea>
+                      <Link to={`/dashboard/courses/coursecontent/${e}`} style={{textDecoration : "none", color : "black"}} >
+                          <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
+                              <CardMedia
+                                className={classes.cover}
+                                image= {liveCourses[e].course.language.name + '.svg' }
+                                title="Live from space album cover"
+                              />
+                                <CardContent style={{width: "100%"}}>
+                                  <Typography component="h4" variant="h5">
+                                  {liveCourses[e].course.name}
+                                  </Typography>
+                                  <Typography component="h5" variant="h6">
+                                  {liveCourses[e].course.language.name}
+                                  </Typography>
+                                  <Typography variant="h6" color="textSecondary">
+                                  Start-Date : {liveCourses[e].course.startdate}
+                                  <Typography variant="h6" color="textSecondary" style={{float : "right"}} >
+                                  End Date : {liveCourses[e].course.enddate}
+                                  </Typography>
+                                  </Typography>
+                                <div className="">
+                                  <div className="text-center">
                                     <Typography component="h5" variant="h5">
-                                    {e.course.name}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                    Start-Date : {e.course.startdate}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                    End Date : {e.course.enddate}
-                                    </Typography>
-                                  <div className="">
-                                    <div className="text-center">
-                                      <Typography component="h5" variant="h5">
-                                      {e.completed_percent}%
-                                        </Typography>
-                                       <Progress className="ml-2 mr-2" value={e.completed_percent} /> </div>
-                                  </div>
-                                  <div className="mt-3">
-                                    <Link to={`/dashboard/courses/coursecontent/${e.id}`}>
-                                      <Button className="btn" color="success" style={{width:"100%"}}>Go</Button>
-                                    </Link>
-                                    </div>
-                                  </CardContent>
-
+                                    {liveCourses[e].completed_percent}%
+                                      </Typography>
+                                     <LinearProgress variant="determinate" className="ml-2 mr-2" value={liveCourses[e].completed_percent} /> </div>
                                 </div>
-                                
-                              </Card>
-                              
-                              
-                            </Col>
-                      </div>
+                                </CardContent>
+                            </Card>
+                          </Link>        
+                    </CardActionArea>
+                    </div>         
                     ))}
-                  </Row>
+                    </CardBody>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
@@ -482,51 +555,45 @@ const StudentDashboard = props => {
                     id="panel2a-header"
                   >
                 <CardTitle className="text-center" style={{fontSize:"20px"}}>Recorded Courses</CardTitle>                  </AccordionSummary>
-                  <AccordionDetails>
-                  <Row>
-                    {pastCourses.map((e) => (
-                      <div>
-                        <Col>
-                        <Card className={classes.root}>
-                                <CardMedia
-                                  className={classes.cover}
-                                  image="https://source.unsplash.com/200x200/?study"
-                                  title="Live from space album cover"
-                                />
-                                <div className={classes.details}>
-                                  <CardContent className={classes.content}>
+                  <AccordionDetails style= {{maxHeight : "500px", overflowY : "scroll", scrollBehavior : "smooth"}} className="scrollbar" >
+                  <CardBody className="overflow">
+                    {Object.keys(pastCourses).map((e,index) => (
+                      <div style={{padding : "10px"}}>
+                      <CardActionArea>
+                      <Link to={`/dashboard/courses/coursecontent/${e}`} style={{textDecoration : "none", color : "black"}} >
+                          <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
+                              <CardMedia
+                                className={classes.cover}
+                                image= {pastCourses[e].course.language.name + '.svg' }
+                                title="Live from space album cover"
+                              />
+                                <CardContent style={{width: "100%"}}>
+                                  <Typography component="h4" variant="h5">
+                                  {pastCourses[e].course.name}
+                                  </Typography>
+                                  <Typography component="h5" variant="h6">
+                                  {pastCourses[e].course.language.name}
+                                  </Typography>
+                                  <Typography variant="h6" color="textSecondary">
+                                  Start-Date : {pastCourses[e].course.startdate}
+                                  <Typography variant="h6" color="textSecondary" style={{float : "right"}} >
+                                  End Date : {pastCourses[e].course.enddate}
+                                  </Typography>
+                                  </Typography>
+                                <div className="">
+                                  <div className="text-center">
                                     <Typography component="h5" variant="h5">
-                                    {e.course.name}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                    Start-Date : {e.course.startdate}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                    End Date : {e.course.enddate}
-                                    </Typography>
-                                  <div className="">
-                                    <div className="text-center">
-                                      <Typography component="h5" variant="h5">
-                                      {e.completed_percent}%
-                                        </Typography>
-                                       <Progress className="ml-2 mr-2" value={e.completed_percent} /> </div>
-                                  </div>
-                                  <div className="mt-3">
-                                    <Link to={`/dashboard/courses/coursecontent/${e.id}`}>
-                                      <Button className="btn" color="success" style={{width:"100%"}}>Go</Button>
-                                    </Link>
-                                    </div>
-                                  </CardContent>
-
+                                    {pastCourses[e].completed_percent}%
+                                      </Typography>
+                                     <LinearProgress variant="determinate" className="ml-2 mr-2" value={pastCourses[e].completed_percent} /> </div>
                                 </div>
-                                
-                              </Card>
-                              
-                              
-                            </Col>
-                      </div>
+                                </CardContent>
+                            </Card>
+                          </Link>        
+                    </CardActionArea>
+                    </div>    
                     ))}
-                  </Row>
+                    </CardBody>
                   </AccordionDetails>
                 </Accordion>
 
@@ -538,62 +605,54 @@ const StudentDashboard = props => {
                   >
                     <CardTitle className="text-center" style={{fontSize:"20px"}}>Upcoming Courses</CardTitle>
                   </AccordionSummary>
-                  <AccordionDetails>
-                  <Row>
-                    {upcomingCourses.map((e) => (
-                      <div>
-                         <Col>
-                         <Card className={classes.root}>
-                                <CardMedia
-                                  className={classes.cover}
-                                  image="https://source.unsplash.com/200x200/?study"
-                                  title="Live from space album cover"
-                                />
-                                <div className={classes.details}>
-                                  <CardContent className={classes.content}>
+                  <AccordionDetails style= {{maxHeight : "500px", overflowY : "scroll"}} className="scrollbar" >
+                  <CardBody className="overflow">
+                    {Object.keys(upcomingCourses).map((e,index) => (
+                      <div style={{padding : "10px"}}>
+                      <CardActionArea>
+                      <Link to={`/dashboard/courses/coursecontent/${e}`} style={{textDecoration : "none", color : "black"}} >
+                          <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
+                              <CardMedia
+                                className={classes.cover}
+                                image= {upcomingCourses[e].course.language.name + '.svg' }
+                                title="Live from space album cover"
+                              />
+                                <CardContent style={{width: "100%"}}>
+                                  <Typography component="h4" variant="h5">
+                                  {upcomingCourses[e].course.name}
+                                  </Typography>
+                                  <Typography variant="h6" color="textSecondary">
+                                  Start-Date : {upcomingCourses[e].course.startdate}
+                                  <Typography variant="h6" color="textSecondary" style={{float : "right"}} >
+                                  End Date : {upcomingCourses[e].course.enddate}
+                                  </Typography>
+                                  </Typography>
+                                <div className="">
+                                  <div className="text-center">
                                     <Typography component="h5" variant="h5">
-                                    {e.course.name}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                    Start-Date : {e.course.startdate}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                    End Date : {e.course.enddate}
-                                    </Typography>
-                                  <div className="">
-                                    <div className="text-center">
-                                      <Typography component="h5" variant="h5">
-                                      {e.completed_percent}%
-                                        </Typography>
-                                       <Progress className="ml-2 mr-2" value={e.completed_percent} /> </div>
-                                  </div>
-                                  <div className="mt-3">
-                                    <Link to={`/dashboard/courses/coursecontent/${e.id}`}>
-                                      <Button className="btn" color="success" style={{width:"100%"}}>Go</Button>
-                                    </Link>
-                                    </div>
-                                  </CardContent>
-
+                                    {upcomingCourses[e].completed_percent}%
+                                      </Typography>
+                                     <LinearProgress variant="determinate" className="ml-2 mr-2" value={upcomingCourses[e].completed_percent} /> </div>
                                 </div>
-                                
-                              </Card>
-                              
-                              
-                            </Col>
-                      </div>
+                                </CardContent>
+                            </Card>
+                          </Link>        
+                    </CardActionArea>
+                    </div>    
                     ))}
-                  </Row>
+                  </CardBody>
                   </AccordionDetails>
                 </Accordion>
                 
                 </Paper>
+                </Slide>
           </Grid>
         </Grid>
         
         </Container>
 
         </React.Fragment>
-          
+          {loader}
       </div>
   )
 }
