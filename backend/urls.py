@@ -8,7 +8,7 @@ from rest_framework_jwt.views import obtain_jwt_token  # added for jwts
 from django.conf import settings
 from core.resources import *
 from django.conf.urls.static import static
-
+from django.views.generic import TemplateView
 
 user_resource = UserResource()
 student_resource = StudentResource()
