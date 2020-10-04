@@ -37,7 +37,7 @@ urlpatterns = [
     path('api/', include(user_resource.urls)),
     path('api/', include(language_resource.urls)),
     path('api/', include(feedback.urls)),
-    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
     
 
 #     path('api/', include(language_trainer.urls)),
