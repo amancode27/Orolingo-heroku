@@ -1,58 +1,42 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Backend Documentation
+## Api Documentation
 
-## Available Scripts
+* Protocol: *localhost:8000/api*
+* Endpoints: *localhost:8000/api/{modelName}/*
+* For example, if you want to access *student* models then it should be *localhost:8000/api/student/*
+* For accessing the list of anything, for example, students, you need to send a get request to *localhost:8000/api/student/*, it sends as response a json in which there is an objects array which contains each of the student objects
+* For accessing the details of a particular object with an id,send a get request to *localhost:8000/api/student/{id}/*
+* Foreign keys in response: foreign keys are given with their detail uri, for example the *course* model has a foreign key to *language* model. So the foreign key to language 1 in a course will be returned as *language: "api/language/1/"*
+* To get the details of a foreign key within the object instead of the uri, you need to set `full=True` in the parameters passed to the foreign key in the resource
+* For filtering a set of objects with a particular parameter, send a get request to *localhost:8000/api/{modelName}/?{parameterName1}={parameterValue1}&{parameterName2}={parameterValue2}*
+  * Example: to get all courses of a language French simply do *localhost:8000/api/course/?language=2* where 2 is the id of French language.
+  * For the above to work, the resource for the particular model should allow *filtering* where the meta class in the resource should have the following code
+    ```
+      filtering: [
+        language: ALL
+      ]
+    ```
+  * There are various other forms of filtering, you can read about that in [tastypie docs - filtering](https://django-tastypie.readthedocs.io/en/latest/resources.html#basic-filtering)
+* To create a new record in a model send a post request to *localhost:8000/api/{modelName}/* with *body* as JSON data with details of the record.
+* Similarly for put, patch as in post
+  * put request can be send to *localhost:8000/api/{modelName}/* to replace the existing version if any.
+  * patch request can be send to *localhost:8000/api/{modelName}/{id}/* to set or change any particular detail
+* Delete requests are same as get request except it can be send only to *localhost:8000/api/{modelName}/{id}/*
 
-In the project directory, you can run:
+## Social Login
+* Code taken from: https://medium.com/@katherinekimetto/simple-facebook-social-login-using-django-rest-framework-e2ac10266be1
+* Generic details about various access provider settings: https://github.com/RealmTeam/django-rest-framework-social-oauth2
 
-### `npm start`
+## Normal Login and Signup
+* Login: *localhost:8000/token-auth/*
+  * Post Request body: username, password
+  * Response: user details and token
+* Signup: *localhost:8000/auth/users/*
+  * Post Request body: username, password, email, etc.
+  * Response: user details and token
+* Token Verification on reload: *localhost:8000/auth/current_user/*
+  * Get request header: Authorization: 'JWT {token}'
+  * Response: user details
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-# Frontend Documentation
-## NPM packages
-* *axios* (for api calls)
-* *react-facebook-login*
-* *react-google-login*
-* *react-router* & *react-router-dom*
-* *reactstrap*
-
-##Functions
-* *handleSignup*: triggered when signup button pressed.This takes the form data and posts it to *localhost:8000/auth/users* and the received token is stored in localhost while the user details in state
-* *handleLogin*: triggered when login button pressed. This takes the form data and posts it to *localhost:8000/token-auth* and the received token is stored in localhost while the user details in state
-* *handleSocialLogin*: triggered on pressing either of the social login button, the user presses the authorize button, an access token is received which is send as body to the backend api *localhost:8000/auth/oauth/login/* which executes the social login view in django
-* *handleSocialTrainerStudent*: triggered if the first time user logs in with his social account to stop the process and ask if he is a student or a teacher
+## App secret and key
+The App secret and key for google and facebook login are in the settings.py file. Please create a new secret and key from any central account and paste it in an environment file and access it from there, instead of directly pasting it in the settings.py file.

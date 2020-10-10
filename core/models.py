@@ -21,7 +21,7 @@ class User(AbstractUser):
 
     
     def __str__(self):
-        return self.fullname
+        return str(self.fullname)
 
 
 
@@ -41,7 +41,7 @@ class Language(models.Model):
     #     Trainer, related_name='languages',through='LanguageTrainer')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 # class LanguageTrainer(models.Model):
 #     trainers = models.ForeignKey(Trainer, on_delete=models.CASCADE)
@@ -74,13 +74,14 @@ class Course(models.Model):
     cost = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class StudentCourse(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     completed_percent = models.IntegerField(default=0)
+    forum_cnt = models.IntegerField(default=0)
     # startdate = models.DateField(auto_now_add=True)
     # enddate = models.DateField(null=True)
 
@@ -132,7 +133,7 @@ class Note(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True)
     pdf = models.FileField(null=True,blank =True)
     def __str__(self):
-        return self.topic
+        return str(self.topic)
 
 
 class Zoom(models.Model):
@@ -153,5 +154,5 @@ class Forum(models.Model):
     #last_activity = models.CharField(max_length = 50, null=True)
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 

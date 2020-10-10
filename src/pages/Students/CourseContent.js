@@ -39,13 +39,20 @@ import Icon from '@mdi/react';
 import TextField from '@material-ui/core/TextField';
 import useFullPageLoader from '../../Components/FullPageLoader/useFullPageLoader.js';
 import { Bounce, Slide, Zoom } from 'react-awesome-reveal';
+import { MDBContainer, MDBMask, MDBView } from "mdbreact";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const CourseContent = (props,user) =>{
     
       const student_course_id = props.match.params['id'];
       const preventDefault = (event) => event.preventDefault();
       //console.log(props.match.params["course"]);
-
+      const [language, setLanguage] = useState("");
       const [loader, showLoader, hideLoader] = useFullPageLoader();
       const [courseName, setCourseName] = useState("");
       const [forumData, setForumData] = useState([]);
@@ -57,6 +64,16 @@ const CourseContent = (props,user) =>{
   };
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const [openDel, setOpenDel] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDel(true);
+  };
+
+  const handleClose = () => {
+    setOpenDel(false);
   };
 
   const drawerWidth = 150;
@@ -175,7 +192,7 @@ const CourseContent = (props,user) =>{
       const discuss = (e) => {
         e.preventDefault();
         showLoader();
-        axios.get(`${basename}/api/student_course/${student_course_id}`)
+        axios.get(`${basename}/api/student_course/${student_course_id}/`)
              .then(res=>{
                hideLoader();
                 axios.post(`${basename}/auth/api/forum/create/`,{
@@ -186,10 +203,17 @@ const CourseContent = (props,user) =>{
                   "student" : props.userId
                 })
                 .then((res) => {
-                  axios.get(`${basename}/auth/api/forum?student_course=${student_course_id}`)
+                  axios.get(`${basename}/auth/api/forum/?student_course=${student_course_id}/`)
                   .then((res) => {
                   setForumData(res.data); 
                 })});
+                console.log(res.data);
+                let cnt = res.data.forum_cnt;
+                cnt=cnt+1;
+                console.log(cnt);
+                axios.patch(`${basename}/api/student_course/${student_course_id}/`,{
+                  "forum_cnt":cnt,
+                });
              })
         setTitle("");
         setDescription("");
@@ -203,19 +227,31 @@ const CourseContent = (props,user) =>{
           .then((res) => {
             showLoader();
             axios.
-              get(`${basename}/auth/api/forum?student_course=${student_course_id}`)
+              get(`${basename}/auth/api/forum?student_course=${student_course_id}/`)
               .then((res1) => {
                 hideLoader();
+                handleClose();
                 const tmp = res1.data.objects;
                 setForumData(res1.data); 
               });
             })
+            axios.get(`${basename}/api/student_course/${student_course_id}/`)
+                 .then(res=>{
+                    let cnt = res.data.forum_cnt;
+                    if(cnt!=0){
+                      cnt=cnt-1;
+                      axios.patch(`${basename}/api/student_course/${student_course_id}/`,{
+                        "forum_cnt":cnt,
+                      });
+                    }
+                 }) 
       }
 
+      
     useEffect(() => {
       showLoader();       
       axios.
-      get(`${basename}/auth/api/forum?student_course=${student_course_id}`)
+      get(`${basename}/auth/api/forum/?student_course=${student_course_id}`)
       .then((res) => {
         hideLoader();
         const tmp = res.data.objects;
@@ -225,6 +261,7 @@ const CourseContent = (props,user) =>{
       axios.get(`${basename}/api/student_course/${student_course_id}`)
       .then((res) =>{
         hideLoader();
+        setLanguage(res.data.course.language.name);
         setCourseName(res.data.course.name);
       });
 
@@ -234,7 +271,6 @@ const CourseContent = (props,user) =>{
     return (
         
         <div className={classes.root}>
-          <CssBaseline/>
           <Drawer
             variant="permanent"
             classes={{
@@ -263,13 +299,24 @@ const CourseContent = (props,user) =>{
           <React.Fragment className={classes.content}>
           
           <Container maxWidth="md" className = "mt-5">
-          <Grid>
-            <Grid item xs={12}>
-              <h1 className="display-2 text-center">
-              {courseName} 
-              </h1>
-              <hr/>
-            </Grid>
+          <Grid container spacing = {3}>
+              <Grid item md={12} >
+              <Card style={{fontSize : "13px", height : "250px"}}>
+                <CardMedia
+                  className={classes.media}
+                  image="/welcome.jpg"
+                  component="img"
+                />
+                <CardContent >
+                  <Typography gutterBottom variant="h3" >
+                  {courseName}
+                  </Typography>
+                  <Typography variant="h5" color="textSecondary" >
+                  {language}
+                  </Typography>
+                </CardContent>
+                </Card>    
+              </Grid>
           </Grid>
             <Grid container spacing = {3}>
               <Grid item xs={12} md={6} lg={6}>
@@ -280,7 +327,6 @@ const CourseContent = (props,user) =>{
                     <CardMedia
                       className={classes.media}
                       image="/assignments.jpg"
-                      title="Contemplative Reptile"
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
@@ -303,7 +349,6 @@ const CourseContent = (props,user) =>{
                     <CardMedia
                       className={classes.media}
                       image="/notes.jpg"
-                      title="dvsdv"
                     />
                     <CardContent >
                       <Typography gutterBottom variant="h5" component="h2">
@@ -345,7 +390,7 @@ const CourseContent = (props,user) =>{
                   <CardTitle className="text-center mt-3" style={{fontSize:"20px"}}>Discussion Forum </CardTitle>
                   </AccordionSummary>
               <AccordionDetails>
-                <Row style={{maxHeight : "500px", width: "100%", overflowY : "scroll" }} >
+                <Row className="scrollbar" style={{maxHeight : "500px", width: "100%", overflowY : "scroll" }} >
               <Col md={12} >
                 <div className="commentList" >
                     {forumData.map(k => (
@@ -368,7 +413,7 @@ const CourseContent = (props,user) =>{
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="h2">
                           { k.creator } 
-                          <Icon style = {{padding : "10px", display : "flex", float : "right"}} path = { mdiDelete } size = {3} onClick= { () => deleteF(k) } />
+                          <Icon style = {{padding : "10px", display : "flex", float : "right"}} path = { mdiDelete } size = {3} onClick= { handleClickOpen } />
                           </Typography>
                           <Typography gutterBottom variant="h6" component="h2">
                           { k.title }
@@ -379,7 +424,27 @@ const CourseContent = (props,user) =>{
                           <Typography variant="body1"  component="p" style={{float : "right"}}>
                           {timeago.format(k.created_at)}
                           </Typography>
-                          
+                          <Dialog
+                            open={openDel}
+                            onClose={handleClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                            <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                If you delete the message the teacher will not be able to see your message again.
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                            <Button onClick={() => deleteF(k)   } color="secondary" autoFocus>
+                                Yes, I am sure
+                              </Button>
+                              <Button onClick={handleClose} color="primary">
+                                No
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
                         </CardContent>
                         </Col>
                         </Row>
@@ -414,6 +479,7 @@ const CourseContent = (props,user) =>{
           </Grid>
         </Container>
         {loader}
+        
         </React.Fragment>
         </div>
     );

@@ -31,27 +31,28 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'corsheaders',            # add this
     'rest_framework',         # add this
     'rest_framework_jwt',     # added this
     'rest_framework_social_oauth2',
     'oauth2_provider',
     'social_django',
     'core',
-    
+    'corsheaders',   
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+         # add this 
   ]
 
 
 MIDDLEWARE = [
 
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',    # add this
+    'corsheaders.middleware.CorsMiddleware', 
+    'django.middleware.common.CommonMiddleware',   # add this
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,6 +62,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+REST_FRAMEWORK = { #added this
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -79,6 +93,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
@@ -135,23 +150,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000', 
-    'http://localhost:3000'
+    'https://localhost:8000', 
+    'http://localhost:3000',
+    'http://127.0.0.1:8000',
     
 )
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
-
-REST_FRAMEWORK = { #added this
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'backend.utils.my_jwt_response_handler',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1)
 }
 
 # added manually
@@ -183,10 +192,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.apis.com/auth/userinfo.profile',
 ]
 
-JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'backend.utils.my_jwt_response_handler',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1)
-}
+
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -216,9 +222,10 @@ STRIPE_PUBLIC_KEY = 'pk_test_51HPYCmEIFPCEHoD2IMgEmOaX06T2UyqNeciajMsPeWvsIR5vFD
 STRIPE_SECRET_KEY = 'sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7gF5ZxPurYWqILsnQGWv4W5LszhwnAj1OWocHoT00gkFTx5Ak'
 # Media config
 
+MEDIA_URL= '/media/'
+MEDIA_ROOT= os.path.join(BASE_DIR, 'build/media')
 
-MEDIA_URL= "/media/"
-MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

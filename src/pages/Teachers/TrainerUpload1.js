@@ -212,7 +212,7 @@ const Page = (props) => {
                         <h4>Date-uploaded: {k.created_at}</h4>
                         <h4>Date-to-be-submitted</h4>
                         <button id='delete' onClick={()=>deleteAssignment(k.id)}>Delete</button>
-                        <a href={` https://orolingo-staging.herokuapp.com${k.pdf}`} target='blank'>
+                        <a href={` http://localhost:8000${k.pdf}`} target='blank'>
                             <button id='download'>Download</button>
                         </a>
                     </div>
@@ -234,7 +234,7 @@ const Page = (props) => {
                         <h4>Date-uploaded: {k.created_at}</h4>
                         <h4>Date-to-be-submitted</h4>
                         <button id='delete' onClick={()=>deleteNote(k.id)}>Delete</button>
-                        <a href={` https://orolingo-staging.herokuapp.com${k.pdf}`} target='blank'>
+                        <a href={` http://localhost:8000${k.pdf}`} target='blank'>
                             <button id='download'>Download</button>
                         </a>
                     </div>

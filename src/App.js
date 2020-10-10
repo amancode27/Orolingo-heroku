@@ -21,7 +21,7 @@ const App = (props) => {
 
     useEffect(() => {
         if (loggedIn) {
-            fetch(" https://orolingo-staging.herokuapp.com/auth/current_user/", {
+            fetch("http://localhost:8000/auth/current_user/", {
                 headers: {
                     Authorization: `JWT ${localStorage.getItem("token")}`,
                 },
@@ -41,7 +41,7 @@ const App = (props) => {
         setError(null);
         setLoading(true);
         e.preventDefault();
-        fetch(" https://orolingo-staging.herokuapp.com/token-auth/", {
+        fetch("http://localhost:8000/token-auth/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -79,7 +79,7 @@ const App = (props) => {
         setError(null);
         setLoading(true);
         e.preventDefault();
-        fetch(" https://orolingo-staging.herokuapp.com/auth/users/", {
+        fetch("http://localhost:8000/auth/users/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -130,7 +130,7 @@ const App = (props) => {
             provider: provider,
             access_token: accessToken,
         };
-        fetch(" https://orolingo-staging.herokuapp.com/auth/oauth/login/", {
+        fetch("http://localhost:8000/auth/oauth/login/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -159,7 +159,7 @@ const App = (props) => {
             is_student: type === "Student",
             is_trainer: type === "Trainer",
         };
-        fetch(` https://orolingo-staging.herokuapp.com/auth/users/${userData.userId}/`, {
+        fetch(`http://localhost:8000/auth/users/${userData.userId}/`, {
             method: "PATCH",
             headers: {
                 Authorization: `JWT ${userData.token}`,
@@ -190,7 +190,7 @@ const App = (props) => {
         console.log(userId + " from App");
         try {
             const response = await fetch(
-                ` https://orolingo-staging.herokuapp.com/auth/users/${userId}/`,
+                `http://localhost:8000/auth/users/${userId}/`,
                 {
                     headers: {
                         Authorization: `JWT ${localStorage.getItem("token")}`,

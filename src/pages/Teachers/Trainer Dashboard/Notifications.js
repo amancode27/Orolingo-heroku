@@ -27,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        maxHeight :'300px',
+        width : '100%',
     },
     cardContent: {
         flexGrow: 1,
@@ -38,47 +40,79 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Notifications = (props) => {
+    console.log(props);
     const classes = useStyles();
     const liveCourses =props.liveCourses;
-    const [assignmentsT,setAssignments] = useState([]);
-    
+    const [assignmentsToday,setAssignments] = useState({});
+    const [endCourses,setEndCourses] = useState({});
+    const [startCourses,setStartCourses]=useState({});
+
+        var date1 = new Date();
+        var mnth = ("0" + (date1.getMonth() + 1)).slice(-2);
+        var day = ("0" + date1.getDate()).slice(-2);
+        var curdate = [date1.getFullYear(), mnth, day].join("-");
+        // console.log(curdate)
+        // console.log(liveCourses[0]);
     useEffect(()=>{
-        liveCourses.map(e=>{
-            axios.get(`${basename}/api/assignments/?course=${e.id}`)
+        Object.keys(liveCourses).map((e,id)=>{
+            axios.get(`${basename}/api/assignments/?course=${e}`)
             .then(res=>{
                 const tmp = res.data.objects;
-                const curdate = Date.now();
+                let cnt = 0;
                 tmp.map(k=>{
-                    if(Date.parse(k.deadline)===curdate){
-                        setAssignments(prev=>{
-                            return[...prev,k];
-                        })
+                    console.log(k.deadline,curdate);
+                    if(k.deadline==curdate){
+                        cnt =cnt +1;
                     }
+                })
+                setAssignments(prev=>{
+                    return {...prev,[e]:{"course_name":liveCourses[e].name,"cnt":cnt}};
                 })
             })
         })
-    },[props])
-
+        Object.keys(liveCourses).map((e,id)=>{
+            if(liveCourses[e].enddate==curdate){
+                setEndCourses(prev=>{
+                    return {...prev,[e]:liveCourses[e]};
+                })
+            }
+            if(liveCourses[e].startdate==curdate){
+                setEndCourses(prev=>{
+                    return {...prev,[e]:liveCourses[e]};
+                })
+            }
+        })
+    },[liveCourses])
+    console.log(assignmentsToday);
     return (
         <Grid item xs={12} sm={6} md={4}>
             <Card style={{ backgroundColor: '#e65100' }}>
                 <Typography gutterBottom variant="h4" component="h2"
                     style={{ textAlign: 'center',color:'white' }}>
-                    Notifications
+                    Notifications <AccessTimeIcon /> 
                 </Typography>
             </Card>
             <Grid item xs={12} >
-                <Card className={classes.card} style={{ width: '100%' }}>
+                <Card className={classes.card}>
                     <CardContent className={classes.cardContent} >
-                        <Typography gutterBottom variant="h5" component="h2">
-                            <AccessTimeIcon /> Place - 2:00 P.M.
-                                        </Typography>
-                        <Typography gutterBottom variant="h5" component="h2">
-                            <AccessTimeIcon /> Place - 2:00 P.M.
-                                        </Typography>
-                        <Typography gutterBottom variant="h5" component="h2">
-                            <AccessTimeIcon /> Place - 2:00 P.M.
-                                        </Typography>
+                        {Object.keys(assignmentsToday).map((e,id)=>(
+                            <Typography gutterBottom variant="h5" component="h2">
+                                {assignmentsToday[e].cnt} sssignments have deadline today of Course-{assignmentsToday[e].course_name} 
+                                <Link to={`/dashboard/trainercourses/uploads/${e}`}>
+                                    Go
+                                </Link>
+                            </Typography>
+                        ))}
+                        {Object.keys(startCourses).map((e,id)=>(
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Congratulations on starting your new course-{startCourses[e].name} 
+                            </Typography>
+                        ))}
+                        {Object.keys(endCourses).map((e,id)=>(
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Congratulations on Course Completion of {endCourses[e].name} 
+                            </Typography>
+                        ))}
                     </CardContent>
                 </Card>
             </Grid>

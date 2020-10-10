@@ -32,8 +32,10 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 class UserView(viewsets.ModelViewSet):       # add this
     # authentication_classes=[TokenAuthentication] #added this
     # permission_classes= [IsAuthenticated] #added this
-    permission_classes = (UserPermission,)
-    serializer_class = UserSerializerWithToken          # add this
+    # permission_classes = (UserPermission,)
+    permission_classes = [permissions.AllowAny]  
+    serializer_class = UserSerializerWithToken  
+      # add this
     queryset = User.objects.all()               # add this
 
 

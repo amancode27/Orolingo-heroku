@@ -58,7 +58,7 @@ const Assignment = (props) =>{
   const student_course_id = props.match.params['id'];
   useEffect(()=>{
     showLoader();
-    axios.get(`${basename}/api/student_course/${student_course_id}`)
+    axios.get(`${basename}/api/student_course/${student_course_id}/`)
           .then((res)=>{
             hideLoader();
             console.log(res.data);
@@ -66,7 +66,7 @@ const Assignment = (props) =>{
             
           }).then(()=>{
             console.log("sadsadasd",course_id);
-            axios.get(`${basename}/api/assignments/?course=${course_id}`)
+            axios.get(`${basename}/api/assignments/?course=${course_id}/`)
             .then(res=>{
                const tmp = res.data.objects;
                
@@ -76,6 +76,7 @@ const Assignment = (props) =>{
                    tmpassignment['description'] = k.description;
                    tmpassignment['created_at'] = k.created_at;
                    tmpassignment['pdf'] = k.pdf;
+                   console.log(k.pdf);
                    tmpassignment['deadline'] = k.deadline;
                    setAssignments(prev=>{
                        return [...prev,tmpassignment];
@@ -119,7 +120,7 @@ const Assignment = (props) =>{
             </div>
           </Container>
         </div>
-        <Container className={classes.cardGrid} maxWidth="md">
+        <Container className={classes.cardGrid} >
           {/* End hero unit */}
           <Grid container spacing={4}>
             {assignments.map((e) => (
@@ -142,8 +143,10 @@ const Assignment = (props) =>{
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
-                      Download
+                  <Button size="small" color="primary">
+                    <a href={`http://localhost:8000${e['pdf']}`} target='blank'>
+                    Download
+                    </a>
                     </Button>
                     <Button size="small" color="primary">
                       {e['created_at']}
