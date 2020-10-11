@@ -62,7 +62,7 @@ const CourseCard = (props) => {
                             <Card className={classes.card}>
                                 <CardMedia
                                     className={classes.cardMedia}
-                                    image= { '/' + language + '.svg'}
+                                    image= { 'static/' + language + '.svg'}
                                     title="Image title"
                                 />
                                 <CardContent className={classes.cardContent}>

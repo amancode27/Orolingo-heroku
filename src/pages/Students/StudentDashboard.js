@@ -576,7 +576,7 @@ const StudentDashboard = props => {
                           <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
                               <CardMedia
                                 className={classes.cover}
-                                image= {pastCourses[e].course.language.name + '.svg' }
+                                image= {'static/' + pastCourses[e].course.language.name + '.svg' }
                                 title="Live from space album cover"
                               />
                                 <CardContent style={{width: "100%"}}>
@@ -626,7 +626,7 @@ const StudentDashboard = props => {
                           <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
                               <CardMedia
                                 className={classes.cover}
-                                image= {upcomingCourses[e].course.language.name + '.svg' }
+                                image= {'static/' + upcomingCourses[e].course.language.name + '.svg' }
                                 title="Live from space album cover"
                               />
                                 <CardContent style={{width: "100%"}}>

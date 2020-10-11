@@ -99,7 +99,7 @@ const UpcomingCourses = (props) => {
                             <Card className={classes.card}>
                                 <CardMedia
                                     className={classes.cardMedia}
-                                    image= {'/' + upcomingCourses[e].language.name + '.svg' }
+                                    image= {'static/' + upcomingCourses[e].language.name + '.svg' }
                                     title="Image title"
                                 />
                                 <CardContent className={classes.cardContent}>
@@ -167,7 +167,7 @@ const UpcomingCourses = (props) => {
                             <Card className={classes.card}>
                                 <CardMedia
                                     className={classes.cardMedia}
-                                    image= {'/' + upcomingCourses[e].language.name + '.svg' }
+                                    image= {'static/' + upcomingCourses[e].language.name + '.svg' }
                                     title="Image title"
                                 />
                                 <CardContent className={classes.cardContent}>

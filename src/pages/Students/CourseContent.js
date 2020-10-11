@@ -304,7 +304,7 @@ const CourseContent = (props,user) =>{
               <Card style={{fontSize : "13px", height : "250px"}}>
                 <CardMedia
                   className={classes.media}
-                  image="/welcome.jpg"
+                  image="static/welcome.jpg"
                   component="img"
                 />
                 <CardContent >
@@ -326,7 +326,7 @@ const CourseContent = (props,user) =>{
                   <Link to={`${student_course_id}/assignments`} style={{textDecoration : "none", color: "black"}}>
                     <CardMedia
                       className={classes.media}
-                      image="/assignments.jpg"
+                      image="static/assignments.jpg"
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
@@ -348,7 +348,7 @@ const CourseContent = (props,user) =>{
               <Link to={`${student_course_id}/notes`} style={{textDecoration : "none", color: "black"}}>
                     <CardMedia
                       className={classes.media}
-                      image="/notes.jpg"
+                      image="static/notes.jpg"
                     />
                     <CardContent >
                       <Typography gutterBottom variant="h5" component="h2">
