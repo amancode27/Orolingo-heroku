@@ -66,7 +66,7 @@ const Assignment = (props) =>{
             
           }).then(()=>{
             console.log("sadsadasd",course_id);
-            axios.get(`${basename}/api/assignments/?course=${course_id}/`)
+            axios.get(`${basename}/api/assignments/?course=${course_id}`)
             .then(res=>{
                const tmp = res.data.objects;
                
@@ -144,7 +144,7 @@ const Assignment = (props) =>{
                   </CardContent>
                   <CardActions>
                   <Button size="small" color="primary">
-                    <a href={`https://orolingo-staging.herokuapp.com${e['pdf']}`} target='blank'>
+                    <a href={`http://localhost:8000${e['pdf']}/`} target='blank'>
                     Download
                     </a>
                     </Button>

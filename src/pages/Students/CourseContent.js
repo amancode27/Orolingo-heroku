@@ -203,7 +203,7 @@ const CourseContent = (props,user) =>{
                   "student" : props.userId
                 })
                 .then((res) => {
-                  axios.get(`${basename}/auth/api/forum/?student_course=${student_course_id}/`)
+                  axios.get(`${basename}/auth/api/forum/?student_course=${student_course_id}`)
                   .then((res) => {
                   setForumData(res.data); 
                 })});

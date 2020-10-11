@@ -302,7 +302,7 @@ const StudentDashboard = props => {
         const languagestolearn = res.data.languages_to_learn;
         setStudentName(res.data.user.fullname)
         languagestolearn.forEach((e) => {
-          axios.get(`${basename}${e}/`).then((res) =>
+          axios.get(`${basename}${e}`).then((res) =>
             setLanguagesToLearn((prev) => {
               return { ...prev, [res.data.name]: e };
             })

@@ -9,12 +9,19 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
+import django_heroku
 import os
 import datetime
+import dj_database_url
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# This is new:
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 
 # Quick-start development settings - unsuitable for production
@@ -56,7 +63,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -89,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -101,18 +108,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         
-    }
-    }
+#     }
+#     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
 
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -219,12 +228,12 @@ EMAIL_HOST_PASSWORD = ''
 #Stripe
 
 
-STRIPE_PUBLIC_KEY = 'pk_test_51HPYCmEIFPCEHoD2IMgEmOaX06T2UyqNeciajMsPeWvsIR5vFDa0cdwAtz9uX5Pirpz62Hm6yPEnVK5D96jdUmYn00LWR0LkhW' 
-STRIPE_SECRET_KEY = 'sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7gF5ZxPurYWqILsnQGWv4W5LszhwnAj1OWocHoT00gkFTx5Ak'
+STRIPE_PUBLIC_KEY ='pk_test_51HPYCmEIFPCEHoD2IMgEmOaX06T2UyqNeciajMsPeWvsIR5vFDa0cdwAtz9uX5Pirpz62Hm6yPEnVK5D96jdUmYn00LWR0LkhW'
+STRIPE_SECRET_KEY ='sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7gF5ZxPurYWqILsnQGWv4W5LszhwnAj1OWocHoT00gkFTx5Ak'
 # Media config
 
 MEDIA_URL= '/media/'
-MEDIA_ROOT= os.path.join(BASE_DIR, 'build/media')
+MEDIA_ROOT= os.path.join(BASE_DIR,'build/media/')
 
 
 
@@ -233,7 +242,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SITE_ID = 1
+
+django_heroku.settings(locals())
+
+# This is new
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)
 

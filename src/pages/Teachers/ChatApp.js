@@ -85,7 +85,7 @@ const ChatApp = (props) => {
         selstd = val;
         setanselstd(val);
         setForumData([]);
-        axios.get(`${basename}/api/student_course/?course=${id}&student=${selstd}/`)
+        axios.get(`${basename}/api/student_course/?course=${id}&student=${selstd}`)
         .then((res) => {
             //console.log(res.data);
             let cnt = res.data.forum_cnt;
@@ -95,7 +95,7 @@ const ChatApp = (props) => {
                 "forum_cnt":cnt,
             });
             res.data.objects.map(k => {
-                axios.get(`${basename}/auth/api/forum/?student_course=${k.id}/`)
+                axios.get(`${basename}/auth/api/forum/?student_course=${k.id}`)
                 .then((res1) => 
                 res1.data.map( k => {
                     setForumData(prev => {
@@ -111,7 +111,7 @@ const ChatApp = (props) => {
     const discuss = (e) => {
         e.preventDefault();
         showLoader();
-        axios.get(`${basename}/api/student_course/?course=${id}&student=${anselstd}/`)
+        axios.get(`${basename}/api/student_course/?course=${id}&student=${anselstd}`)
                 .then(res=>{
                     //console.log(res.data)
                     hideLoader();
@@ -124,7 +124,7 @@ const ChatApp = (props) => {
                 })
                 .then((res) => {
                     setForumData([]);
-                    axios.get(`${basename}/api/student_course/?course=${id}&student=${anselstd}/`)
+                    axios.get(`${basename}/api/student_course/?course=${id}&student=${anselstd}`)
                     .then((res) => {
                         //console.log(res.data);
                         res.data.objects.map(k => {
@@ -152,13 +152,13 @@ const ChatApp = (props) => {
             .then((res) => {
                 showLoader();
                 setForumData([]);
-                axios.get(`${basename}/api/student_course/?course=${id}&student=${anselstd}/`)
+                axios.get(`${basename}/api/student_course/?course=${id}&student=${anselstd}`)
                 .then((res) => {
                     //console.log(res.data);
                     hideLoader();
                     handleClose();
                     res.data.objects.map(k => {
-                        axios.get(`${basename}/auth/api/forum/?student_course=${k.id}/`)
+                        axios.get(`${basename}/auth/api/forum/?student_course=${k.id}`)
                         .then((res1) => 
                         res1.data.map( k => {
                             setForumData(prev => {
@@ -175,7 +175,7 @@ const ChatApp = (props) => {
 
     useEffect(() => {
         showLoader();
-        axios.get(`${basename}/api/student_course/?course=${id}/`)
+        axios.get(`${basename}/api/student_course/?course=${id}`)
         .then((res) => {
             //console.log(res.data);
             hideLoader();

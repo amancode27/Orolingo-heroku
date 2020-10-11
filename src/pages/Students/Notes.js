@@ -69,7 +69,7 @@ const NotesCard = (props) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <a href={`https://orolingo-staging.herokuapp.com${notes['pdf']}`} target='blank'>
+            <a href={`http://localhost:8000${notes['pdf']}/`} target='blank'>
             <Button size="small" color="primary">
               Download
             </Button>
@@ -96,7 +96,7 @@ const Notes = (props) =>{
                hideLoader();
                 course_id=res.data.course['id'];
              }).then(()=>{
-              axios.get(`${basename}/api/note/?course=${course_id}/`)
+              axios.get(`${basename}/api/note/?course=${course_id}`)
               .then(res=>{
                  const tmp = res.data.objects;
                  tmp.map(k=>{

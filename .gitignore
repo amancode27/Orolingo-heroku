@@ -335,4 +335,4 @@ sketch
 # Ignore all local history of files
 .history
 
-# End of https://www.toptal.com/developers/gitignore/api/node,python,visualstudiocode,django,react
+# End of https://www.toptal.com/developers/gitignore/api/node,python,visualstudiocode,django,react'.env' 

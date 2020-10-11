@@ -112,13 +112,13 @@ const CreateCourse = (props) =>{
         axios.get(`${basename}/api/trainer/?user=${user_id}`)
              .then(res1=>{
                  hideLoader();
-                 axios.get(`${basename}/api/language/?name=${courseDetails['language']}/`)
+                 axios.get(`${basename}/api/language/?name=${courseDetails['language']}`)
                       .then(res2=>{
                             if(!res2.data.objects.length){
                                 axios.post(`${basename}/api/language/`,{
                                     'name':courseDetails['language']
                                 }).then(()=>{
-                                    axios.get(`${basename}/api/language/?name=${courseDetails['language']}/`)
+                                    axios.get(`${basename}/api/language/?name=${courseDetails['language']}`)
                                          .then(res3=>{
                                             axios.post(`${basename}/api/course/`,{
                                                 "language":res3.data.objects[0],

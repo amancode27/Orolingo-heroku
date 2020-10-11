@@ -168,7 +168,7 @@ const CheckoutForm = (props) => {
 
 const handleSubmit = (event) => {
     event.preventDefault();
-    axios.get(`${basename}/api/student_course/?student=${props.userId}&course=${course_id}/`)
+    axios.get(`${basename}/api/student_course/?student=${props.userId}&course=${course_id}`)
          .then(res=>{
             console.log(res);
             if(res.data.objects.length){

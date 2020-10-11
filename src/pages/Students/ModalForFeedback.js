@@ -38,7 +38,7 @@ const FeedbackModal = (props) => {
              .then(res=>{
                 course_id = res.data.course['id'];
              }).then(()=>{
-                axios.get(`${basename}/api/feedback/?student=${student_id}&course=${course_id}/`)
+                axios.get(`${basename}/api/feedback/?student=${student_id}&course=${course_id}`)
              .then(res=>{
                 if(res.data.objects.length){
                     console.log("You have already given a feedback");
