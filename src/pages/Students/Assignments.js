@@ -144,7 +144,7 @@ const Assignment = (props) =>{
                   </CardContent>
                   <CardActions>
                   <Button size="small" color="primary">
-                    <a href={`https://orolingo-staging.herokuapp.com${e['pdf']}/`} target='blank'>
+                    <a href={`${e['pdf']}`} target='blank'>
                     Download
                     </a>
                     </Button>

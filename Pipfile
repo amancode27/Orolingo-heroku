@@ -59,6 +59,8 @@ stripe = "*"
 django-heroku = "*"
 psycopg2 = "*"
 python-dotenv = "*"
+boto3 = "*"
+django-storages = "*"
 
 [dev-packages]
 

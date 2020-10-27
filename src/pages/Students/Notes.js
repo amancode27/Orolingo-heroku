@@ -69,7 +69,7 @@ const NotesCard = (props) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <a href={`https://orolingo-staging.herokuapp.com${notes['pdf']}/`} target='blank'>
+            <a href={`${notes['pdf']}`} target='blank'>
             <Button size="small" color="primary">
               Download
             </Button>

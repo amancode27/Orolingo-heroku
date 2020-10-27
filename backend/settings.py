@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages'
          # add this 
   ]
 
@@ -123,6 +124,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -230,21 +234,54 @@ EMAIL_HOST_PASSWORD = ''
 
 STRIPE_PUBLIC_KEY ='pk_test_51HPYCmEIFPCEHoD2IMgEmOaX06T2UyqNeciajMsPeWvsIR5vFDa0cdwAtz9uX5Pirpz62Hm6yPEnVK5D96jdUmYn00LWR0LkhW'
 STRIPE_SECRET_KEY ='sk_test_51HPYCmEIFPCEHoD2FXA72ACv36HxfH03SCenKGVuEXK7YQXQY7gF5ZxPurYWqILsnQGWv4W5LszhwnAj1OWocHoT00gkFTx5Ak'
-# Media config
-
-MEDIA_URL= '/media/'
-MEDIA_ROOT= os.path.join(BASE_DIR,'build/media/')
 
 
 
+#AWS CONFIGURATION
+
+
+
+
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
+
+
+
+
+AWS_ACCESS_KEY_ID = 'AKIAQR3ASIZUOW36Y7O6'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'orolingo-assets'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.ap-south-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_STATIC_LOCATION = 'static'
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = False
+
+#static and media configuration
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'build/static'),
     os.path.join(BASE_DIR, 'build'),
+    os.path.join(BASE_DIR, 'build/static')
 ]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'build/static/media')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION)
+DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage' 
+# Media config
+
+# MEDIA_URL= '/media/'
+# MEDIA_ROOT= os.path.join(BASE_DIR,'build/media/')
+
+
+
+
 
 SITE_ID = 1
 
