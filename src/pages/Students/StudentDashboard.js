@@ -309,7 +309,7 @@ const StudentDashboard = props => {
           );
         });
         axios
-          .get(`[${basename}/api/student_course/?student=${props.userId}]`)
+          .get(`${basename}/api/student_course/?student=${props.userId}`)
           .then((res) => {
               const tmp = res.data.objects;
               tmp.map(k=>{
