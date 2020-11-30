@@ -412,7 +412,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             current_site = get_current_site(request = request).domain
             relativeLink = reverse('password-reset-confirm' , kwargs = {'uidb64':uidb64 ,'token':token })
             # absurl = 'http://' + current_site + relativeLink
-            absurl = 'localhost:8000/password-reset-confirm/'
+            absurl = 'https://orolingo-staging.herokuapp.com/password-reset-confirm/'
             email_body = 'Hello, \n Please use the below link to reset your password. Enter the one-time token and ID for password reset. Thank you!\n' + 'http://'+absurl
             email_body += '\nID: ' + str(uidb64) + '\nToken: ' + str(token)
             email_body+= '\n\nRegards,\nTeam Orolingo'
