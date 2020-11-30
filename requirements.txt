@@ -1,8 +1,8 @@
 appdirs==1.4.4
 asgiref==3.2.10
 astroid==2.4.2
-boto3==1.16.4
-botocore==1.19.4
+boto3==1.16.25
+botocore==1.19.25
 certifi==2020.6.20
 cffi==1.14.1
 chardet==3.0.4
@@ -23,7 +23,6 @@ django-tastypie==0.14.3
 djangorestframework==3.11.0
 djangorestframework-jwt==1.11.0
 djangorestframework-simplejwt==4.4.0
-future==0.18.2
 gunicorn==19.7.1
 idna==2.10
 isort==4.3.21
@@ -42,7 +41,7 @@ PyMySQL==0.10.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-decouple==3.3
-python-dotenv==0.14.0
+python-dotenv==0.15.0
 python-mimeparse==1.6.0
 python3-openid==3.2.0
 pytz==2020.1
