@@ -201,7 +201,7 @@ const Page = (props) => {
                     console.log(k);
                     tmp['rating'] = k['rating'];
                     tmp['body'] = k['body'];
-                    axios.get(`${basename}${k['student']}/`)
+                    axios.get(`${basename}${k['student']}`)
                         .then(res1 => {
                             console.log(res1);
                             tmp['fullname'] = res1.data.user['fullname'];
