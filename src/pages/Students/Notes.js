@@ -43,7 +43,7 @@ import useFullPageLoader from '../../Components/FullPageLoader/useFullPageLoader
     },
     footer: {
       backgroundColor: theme.palette.background.paper,
-      padding: theme.spacing(6),
+      padding: theme.spacing(5),
     },
   }));
   const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -57,7 +57,7 @@ const NotesCard = (props) => {
       <Card className={classes.card}>
         <CardMedia
           className={classes.cardMedia}
-          image="https://source.unsplash.com/random"
+          image="https://source.unsplash.com/random?book"
           title="Image title"
         />
         <CardContent className={classes.cardContent}>
@@ -69,7 +69,7 @@ const NotesCard = (props) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <a href={`${notes['pdf']}`} target='blank'>
+            <a href={notes['pdf']} target='blank'>
             <Button size="small" color="primary">
               Download
             </Button>
@@ -141,7 +141,7 @@ const Notes = (props) =>{
             </div>
             </Container>
           </div>
-            <Container className={classes.cardGrid} maxWidth="md">
+            <Container className={classes.cardGrid} maxWidth="lg">
             <Grid container spacing={4}>
                 {notes.map((k,index)=>(
                 <NotesCard notes={k} index={index}/>

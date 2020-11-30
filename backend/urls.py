@@ -20,6 +20,8 @@ note_resource = NoteResource()
 student_course_resource = StudentCourseResource()
 language_resource = LanguageResource()
 feedback = FeedbackResource()
+video = VideosResource()
+tellus = TellUsResource()
 # language_trainer = LanguageTrainerResource()
 
 urlpatterns = [
@@ -37,6 +39,8 @@ urlpatterns = [
     path('api/', include(user_resource.urls)),
     path('api/', include(language_resource.urls)),
     path('api/', include(feedback.urls)),
+    path('api/',include(video.urls)),
+    path('api/',include(tellus.urls)),
     re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
     
 

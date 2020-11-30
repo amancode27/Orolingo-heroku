@@ -1,6 +1,6 @@
 
 
 
-const basename = 'https://orolingo-staging.herokuapp.com';
+const basename = 'http://localhost:8000';
 
 export default basename;

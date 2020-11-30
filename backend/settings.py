@@ -14,6 +14,8 @@ import os
 import datetime
 import dj_database_url
 import dotenv
+import jwt
+from http import client
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,6 +25,9 @@ dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
+ZOOM_API_KEY = 'Fdom-FrxT0mzIcbeV8mcwg'
+
+ZOOM_API_SECRET_KEY = 'Df5kPfqJGfEyJhgw1u8YdfE87NeVMP2zkngz' 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -165,7 +170,7 @@ USE_TZ = True
 
 CORS_ORIGIN_WHITELIST = (
     'https://localhost:8000', 
-    'http://localhost:3000',
+    'http://localhost:8000',
     'http://127.0.0.1:8000',
     
 )
@@ -220,14 +225,30 @@ AUTHENTICATION_BACKENDS = (
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
-#SMTP Configuration #forgot password
-
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+# EMAIL_HOST_USER = os.environ.get(EMAIL_HOST_USER)
+# EMAIL_HOST_PASSWORD = os.environ.get(EMAIL_HOST_PASSWORD)
+EMAIL_HOST_USER = 'orolingo01@gmail.com'
+EMAIL_HOST_PASSWORD = 'orolingo123456789'
+#Zoom integration
+
+payload = {'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30),
+           'iss': ZOOM_API_KEY    
+          }     
+token = jwt.encode(payload, ZOOM_API_SECRET_KEY).decode("utf-8")
+
+conn = client.HTTPSConnection("api.zoom.us")
+
+headers = {
+        'authorization': "Bearer " + token,
+        'content-type': "application/json"
+        }
+
+#https://api.zoom.us/v2/
 
 #Stripe
 

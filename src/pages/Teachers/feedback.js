@@ -1,5 +1,5 @@
 import { Container } from '@material-ui/core';
-import axios from 'axios';
+import Axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import basename from "../Home/basename.js";
 import ReactStars from "react-rating-stars-component";
@@ -27,7 +27,7 @@ const Feedback = (props) => {
     useEffect( () => {
         const course_id = props.match.params['id'];
         //console.log(course_id);
-        axios.get(`${basename}/api/feedback/?course=${course_id}`)
+        Axios.get(`${basename}/api/feedback/?course=${course_id}`)
         .then((res) => {
             setFeedData(res.data.objects);
             

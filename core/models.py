@@ -156,3 +156,28 @@ class Forum(models.Model):
     def __str__(self):
         return str(self.title)
 
+class Videos(models.Model):
+    topic = models.CharField(max_length=200)
+    description = models.TextField(null=True)
+    pdf = models.FileField(upload_to='videos/') #pdf name is used for using the same upload modal
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True)
+    created_at = models.DateField(auto_now_add=True,null=True)
+
+    class Meta:
+        verbose_name = 'video'
+        verbose_name_plural = 'videos'
+         
+    def __str__(self):
+        return str(self.topic)
+
+class TellUs(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+    lang_to_learn = models.CharField(max_length=100)
+    purpose = models.CharField(max_length=100)
+    lang_already = models.CharField(max_length=100)
+    preference = models.CharField(max_length=100)
+    profile = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name

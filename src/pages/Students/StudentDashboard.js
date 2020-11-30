@@ -212,7 +212,7 @@ const StudentDashboard = props => {
   }
   const addToLearnLanguage = (key,route) =>{
     if(!(key in languagesToLearn)){
-        axios.get(`${basename}${route}`)
+        axios.get(`${basename}${route}/`)
           .then(res=>{
             axios.get(`${basename}/api/student/${props.userId}/`)
                  .then(studentres=>{
@@ -240,7 +240,7 @@ const StudentDashboard = props => {
       Object.keys(languagesToLearn).map(k=>{
           let route = languagesToLearn[k];
           if(k!=key) {
-            axios.get(`${basename}${route}`)
+            axios.get(`${basename}${route}/`)
             .then(res=>{
               axios.get(`${basename}/api/student/${props.userId}/`)
                  .then(studentres=>{
@@ -374,6 +374,9 @@ const StudentDashboard = props => {
   //console.log(studentName);
 
   console.log(liveCourses);
+  const setClasses = makeStyles({
+    
+  })
   return (
     <div className={classes.root}>
       <CssBaseline/>
@@ -433,7 +436,7 @@ const StudentDashboard = props => {
                       size={3}
                       horizontal
                       vertical
-                      rotate={-180}
+                      rotate={180}
                       color="green"
                       />
                      </CardTitle>
@@ -528,7 +531,7 @@ const StudentDashboard = props => {
                           <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
                               <CardMedia
                                 className={classes.cover}
-                                image= {liveCourses[e].course.language.name + '.svg' }
+                                image= { '/static/' + liveCourses[e].course.language.name + '.svg' }
                                 title="Live from space album cover"
                               />
                                 <CardContent style={{width: "100%"}}>
@@ -576,7 +579,7 @@ const StudentDashboard = props => {
                           <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
                               <CardMedia
                                 className={classes.cover}
-                                image= {'static/' + pastCourses[e].course.language.name + '.svg' }
+                                image= { '/static/' + pastCourses[e].course.language.name + '.svg' }
                                 title="Live from space album cover"
                               />
                                 <CardContent style={{width: "100%"}}>
@@ -626,12 +629,12 @@ const StudentDashboard = props => {
                           <Card className={classes.root} style={{width : "100%",padding : "10px"}}>
                               <CardMedia
                                 className={classes.cover}
-                                image= {'static/' + upcomingCourses[e].course.language.name + '.svg' }
+                                image= {upcomingCourses[e].course.language.name + '.svg' }
                                 title="Live from space album cover"
                               />
                                 <CardContent style={{width: "100%"}}>
                                   <Typography component="h4" variant="h5">
-                                  {upcomingCourses[e].course.name}
+                                  { '/static/' + upcomingCourses[e].course.name}
                                   </Typography>
                                   <Typography variant="h6" color="textSecondary">
                                   Start-Date : {upcomingCourses[e].course.startdate}
@@ -664,7 +667,7 @@ const StudentDashboard = props => {
         </Container>
 
         </React.Fragment>
-          {loader}
+          {/* {loader} */}
       </div>
   )
 }

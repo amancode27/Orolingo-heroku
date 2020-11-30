@@ -5,7 +5,7 @@ import {
   CardTitle,
   CardBody,
   CardText,
-  Row,
+  Row, 
   Col,
   Container,
   
@@ -148,7 +148,7 @@ const ChatApp = (props) => {
         // e.preventDefault();
         let delId = e.id;
          console.log(delId);
-           axios.delete(`${basename}/auth/api/forum/${delId}/delete`)
+           axios.delete(`${basename}/auth/api/forum/${delId}/delete/`)
             .then((res) => {
                 showLoader();
                 setForumData([]);

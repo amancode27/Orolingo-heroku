@@ -163,7 +163,7 @@ const TrainerDashboard = (props) => {
 
   useEffect(()=>{
     axios
-    .get(`${basename}/api/course/?trainer=${props.userId}/`)
+    .get(`${basename}/api/course/?trainer=${props.userId}`)
     .then((res) => {
         //console.log(res.data.objects);
         const tmp = res.data.objects;

@@ -18,6 +18,17 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import UploadModal from './UploadModal.js';
 import useFullPageLoader from '../../Components/FullPageLoader/useFullPageLoader.js';
+import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import ReactPlayer from 'react-player';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +61,15 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
+    fab: {
+        margin: theme.spacing(2),
+      },
+
+    absolute: {
+        position: 'fixed',
+        bottom: theme.spacing(2),
+        right: theme.spacing(3),
+      },
 }));
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -58,16 +78,63 @@ const Page = (props) => {
     const classes = useStyles();
     const [assignment, setAssignment] = useState([]);
     const [notes, setNotes] = useState([]);
+    const [videos, setVideos] = useState([]);
     const [lectures, setLectures] = useState([]);
     const [feedback, setFeedback] = useState([]);
+    const [courseName, setCourseName] = useState("");
     let course_id;
     const student_course_id = props.match.params['id'];
     const [loader,showLoader,hideLoader] = useFullPageLoader();
+    const [openAssignment,setOpenAssignment] = useState({});
+    const [openNotes,setOpenNotes] = useState({});
+    const [openVideos,setOpenVideos] = useState({});
+
+    const handleClickOpenAssignment = (ID) =>{
+        setOpenAssignment(prev =>{
+            return {...prev,[ID]:true};
+        })
+    }
+
+    const handleClickCloseAssignment = (ID) => {
+        setOpenAssignment(prev =>{
+            return {...prev,[ID]:false};
+        })
+    };
+
+    const handleClickOpenNotes = (ID) =>{
+        setOpenNotes(prev =>{
+            return {...prev,[ID]:true};
+        })
+    }
+
+    const handleClickCloseNotes = (ID) => {
+        setOpenNotes(prev =>{
+            return {...prev,[ID]:false};
+        })
+    };
+
+    const handleClickOpenVideos = (ID) =>{
+        setOpenVideos(prev =>{
+            return {...prev,[ID]:true};
+        })
+    }
+
+    const handleClickCloseVideos = (ID) => {
+        setOpenVideos(prev =>{
+            return {...prev,[ID]:false};
+        })
+    };
+
 
 
     useEffect(() => {
         showLoader();
         const course_id = props.match.params['id'];
+        axios.get(`${basename}/api/course/${course_id}/`)
+        .then(res => {
+            setCourseName(res.data.name);
+        })
+
         axios.get(`${basename}/api/assignments/?course=${course_id}`)
             .then(res => {
                 hideLoader();
@@ -82,6 +149,9 @@ const Page = (props) => {
                     tmp['deadline'] = k.deadline;
                     setAssignment(prev => {
                         return [...prev, tmp];
+                    })
+                    setOpenAssignment(prev=>{
+                        return {...prev,[k.id]:false};
                     })
                 });
             })
@@ -98,8 +168,31 @@ const Page = (props) => {
                     setNotes(prev => {
                         return [...prev, tmp];
                     })
+                    setOpenNotes(prev=>{
+                        return {...prev,[k.id]:false};
+                    })
                 });
             })
+        
+        axios.get(`${basename}/api/videos/?course=${course_id}`)
+            .then(res => {
+                const a = res.data.objects;
+                a.map(k => {
+                    const tmp = {};
+                    tmp['id'] = k.id;
+                    tmp['topic'] = k.topic;
+                    tmp['description'] = k.description;
+                    tmp['created_at'] = k.created_at;
+                    tmp['pdf'] = k.pdf;
+                    setVideos(prev => {
+                        return [...prev, tmp];
+                    })
+                    setOpenVideos(prev=>{
+                        return {...prev,[k.id]:false};
+                    })
+                });
+            })
+        
         axios.get(`${basename}/api/feedback/?course=${course_id}`)
             .then(res => {
                 const tmp1 = res.data.objects;
@@ -108,7 +201,7 @@ const Page = (props) => {
                     console.log(k);
                     tmp['rating'] = k['rating'];
                     tmp['body'] = k['body'];
-                    axios.get(`${basename}${k['student']}`)
+                    axios.get(`${basename}${k['student']}/`)
                         .then(res1 => {
                             console.log(res1);
                             tmp['fullname'] = res1.data.user['fullname'];
@@ -120,19 +213,38 @@ const Page = (props) => {
             })
     }, [props.match.params['id']])
 
-    const deleteAssignment = (id) =>{
+    const deleteAssignment = (event,id) =>{
+        showLoader();
         axios.delete(`${basename}/api/assignments/${id}/`);
         setAssignment(prev=>prev.filter(e=>{
             return e.id!=id;
         }))
+        hideLoader();
+        handleClickCloseAssignment(id);
+        
     }
     
     const deleteNote = (id) =>{
+        showLoader();
         axios.delete(`${basename}/api/note/${id}/`);
         setNotes(prev=>prev.filter(e=>{
             return e.id!=id;
         }))
+        hideLoader();
+        handleClickCloseNotes(id);
     }
+
+    const deleteVideo = (id) =>{
+        showLoader();
+        axios.delete(`${basename}/api/videos/${id}/`);
+        setVideos(prev=>prev.filter(e=>{
+            return e.id!=id;
+        }))
+        hideLoader();
+        handleClickCloseVideos(id);
+    }    
+
+
     console.log(props)
     return (
         <React.Fragment>
@@ -142,7 +254,7 @@ const Page = (props) => {
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Course Name
+                            {courseName}
                         </Typography>
                         <Typography variant="h5" align="center" color="textSecondary" paragraph>
                             A One go to page for managing your uploads.
@@ -176,18 +288,18 @@ const Page = (props) => {
                                     {/* <Button variant="contained" color="primary">
                                         Upload
                                     </Button> */}
-                                    <UploadModal {...props} {...{'content':'assignments'}} buttonLabel = {"Upload Assignments"} className = {"assignments"} />
+                                    <UploadModal {...props} {...{'content':'assignments'}} buttonLabel = {"Upload Assignments"} className = {"Assignment"} />
                                 </CardContent>
                             </Card>
                             {assignment.map((e) => (
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
+                                        image="https://source.unsplash.com/random?book"
                                         title="Image title"
                                     />
                                     <CardContent className={classes.cardContent}>
-                                        <Typography gutterBottom variant="h3" component="h2">
+                                        <Typography gutterBottom variant="h4" component="h2">
                                             {e['topic']}
                                         </Typography>
                                         <Typography>
@@ -195,15 +307,112 @@ const Page = (props) => {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="large" variant="outlined" color="primary" onClick={()=>deleteAssignment(e.id)}>
+                                    <Button size="large" variant="outlined" color="primary">
+                                        <a href={e['pdf']} target='blank'>
+                                        Download
+                                        </a>
+                                    </Button>
+                                        <Button size="large" variant="outlined" color="primary" onClick={() =>handleClickOpenAssignment(e['id'])}>
                                             Delete
                                         </Button>
                                         <Button size="large" color="primary">
                                             Deadline : {e['deadline']}
                                         </Button>
+                                        <Dialog
+                                            open={openAssignment[e['id']]}
+                                            onClose={() =>handleClickCloseAssignment(e['id'])}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">{"Are you sure? "}</DialogTitle>
+                                            <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                Once this assignment is deleted it will not be visible to the student.
+                                            </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions>
+                                            <Button onClick={(event)=>deleteAssignment(event,e['id'])} color="secondary">
+                                                Yes, I am Sure
+                                            </Button>
+                                            <Button onClick={() =>handleClickCloseAssignment(e['id'])} color="primary" autoFocus>
+                                                No
+                                            </Button>
+                                            </DialogActions>
+                                        </Dialog>
+
                                     </CardActions>
                                 </Card>
                             ))}
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Card className={classes.card}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h4" component="h2">
+                                        Videos
+                                    </Typography>
+                                    {/* <Button variant="contained" color="primary">
+                                        Upload
+                                    </Button> */}
+                                    <UploadModal {...props} {...{'content':'videos'}} buttonLabel = {"Upload Videos"} className = {"Video"} />
+                                </CardContent>
+                                {videos.map((e) => (
+                                    
+                                <Card className={classes.card}>
+                                    {console.log(e['pdf'])}
+                                    <ReactPlayer
+                                        className='react-player'
+                                        url= {e['pdf']}
+                                        width='100%'
+                                        height='100%'
+                                        controls
+                                    />
+                                    <CardContent className={classes.cardContent}>
+                                        <Typography gutterBottom variant="h4" component="h2">
+                                            {e['topic']}
+                                        </Typography>
+                                        <Typography>
+                                            {e['description']}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                    <Button size="large" variant="outlined" color="primary">
+                                        <a href={e['pdf']} target='blank'>
+                                        Download
+                                        </a>
+                                    </Button>
+                                        <Button size="large" variant="outlined" color="primary" onClick={()=>handleClickOpenVideos(e['id'])}>
+                                            Delete
+                                        </Button>
+                                        <Button size="large"  color="primary">
+                                            Created At : {e['created_at']}
+                                        </Button>
+                                        <Dialog
+                                            open={openVideos[e['id']]}
+                                            onClose={()=>handleClickCloseVideos(e['id'])}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">{"Are you sure? "}</DialogTitle>
+                                            <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                Once this video is deleted it will not be visible to the student.
+                                            </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions>
+                                            <Button onClick={()=>deleteVideo(e.id)} color="secondary">
+                                                Yes, I am Sure
+                                            </Button>
+                                            <Button onClick={()=>handleClickCloseVideos(e.id)} color="primary" autoFocus>
+                                                No
+                                            </Button>
+                                            </DialogActions>
+                                        </Dialog>
+
+                                    </CardActions>
+                                </Card>
+                            ))}
+                            </Card> 
+
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <Card className={classes.card}>
@@ -214,18 +423,18 @@ const Page = (props) => {
                                     {/* <Button variant="contained" color="primary">
                                         Upload
                                     </Button> */}
-                                    <UploadModal {...props} {...{'content':'note'}} buttonLabel = {"Upload Notes"} className = {"feedback"} />
+                                    <UploadModal {...props} {...{'content':'note'}} buttonLabel = {"Upload Notes"} className = {"Note"} />
                                 </CardContent>
                             </Card>
                             {notes.map((e) => (
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
+                                        image="https://source.unsplash.com/random?book"
                                         title="Image title"
                                     />
                                     <CardContent className={classes.cardContent}>
-                                        <Typography gutterBottom variant="h5" component="h2">
+                                        <Typography gutterBottom variant="h4" component="h2">
                                             {e['topic']}
                                         </Typography>
                                         <Typography>
@@ -233,31 +442,54 @@ const Page = (props) => {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small" color="primary" onClick={()=>deleteNote(e.id)}>
+                                        <Button size="large" variant="outlined" color="primary">
+                                            <a href={e['pdf']} target='blank'>
+                                            Download
+                                            </a>
+                                        </Button>
+                                        <Button size="large" variant="outlined" color="primary" onClick={()=>handleClickOpenNotes(e['id'])}>
                                             Delete
                                         </Button>
-                                        <Button size="small" color="primary">
-                                            {e['created_at']}
+                                        <Button size="large"  color="primary">
+                                            Created At : {e['created_at']}
                                         </Button>
+                                        <Dialog
+                                            open={openNotes[e['id']]}
+                                            onClose={()=>handleClickCloseNotes(e['id'])}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">{"Are you sure? "}</DialogTitle>
+                                            <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                Once this note is deleted it will not be visible to the student.
+                                            </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions>
+                                            <Button onClick={()=>deleteNote(e.id)} color="secondary">
+                                                Yes, I am Sure
+                                            </Button>
+                                            <Button onClick={()=>handleClickCloseNotes(e['id'])} color="primary" autoFocus>
+                                                No
+                                            </Button>
+                                            </DialogActions>
+                                        </Dialog>
                                     </CardActions>
                                 </Card>
                             ))}
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
-                            <Card className={classes.card}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h4" component="h2">
-                                        Lectures
-                                    </Typography>
-                                    <Button variant="contained" color="secondary">
-                                        GO LIVE
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                            {/* */}
+                            
                         </Grid>
                     </Grid>
                 </Container>
+                <Tooltip title="Go Live" aria-label="add">
+                    <a href = "https://zoom.us/" target="_blank">
+                    <Fab color="primary" className={classes.absolute}>
+                        <WifiTetheringIcon style = {{ fontSize : 40 }}/>
+                    </Fab>
+                    </a>
+                </Tooltip>
             </main>
             {/* Footer */}
         {loader}

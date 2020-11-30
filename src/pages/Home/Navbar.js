@@ -37,6 +37,19 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.getContrastText(deepPurple[500]),
     backgroundColor: deepPurple[500],
   },
+  navParent: {
+    
+  },
+  navbar: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent:"center",
+    alignItems:"center",
+  
+  },
+  simpleMenu: {
+    outline: "none",
+  },
 }));
 
 function LetterAvatars() {
@@ -68,7 +81,7 @@ function SimpleMenu(props) {
   }
 
   return (
-    <div style={{"margin":"0px !important"}} style={{"z-index":"1000000000000000"}}>
+    <div style={{margin:"0px !important",zIndex:"1000000000000000"}}>
       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} style={{"margin":"0px"}}>
         <LetterAvatars/>
       </Button>
@@ -80,6 +93,12 @@ function SimpleMenu(props) {
         onClose={handleClose}
         style={{"marginTop":"30px" , "marginLeft":"5px" , "width":"300px" ,"z-index":"10000000"}}
       >
+        <Link to='/' style={{"textDecoration":"None", "color":"black"}}>
+          <MenuItem >Home </MenuItem>
+      </Link>
+        <Link to='/dashboard' style={{"textDecoration":"None", "color":"black"}}>
+          <MenuItem >Dashboard </MenuItem>
+      </Link>
       <Link to='/login' style={{"textDecoration":"None"}}>
         <MenuItem onClick={handleLogout} >Logout</MenuItem>
       </Link>
@@ -90,24 +109,15 @@ function SimpleMenu(props) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 const NavBar = (props) => {
+  const classes = useStyles();
   const [isOpen, setIsOpen] = React.useState(false);
   console.log("This is props");
   console.log(props);
   const toggle = () => setIsOpen(!isOpen);
   let e;
   if(props.loggedIn){
-    e=(<SimpleMenu {...props}/>)
+    e=(<SimpleMenu {...props} className={classes.simpleMenu}/>)
   }
   else{
     e=(<NavItem>
@@ -115,26 +125,27 @@ const NavBar = (props) => {
     </NavItem>)
   }
   return (
-    <nav className="navbar" style={{"position":"sticky","top":"0px" , "z-index":"100000"}}>
-      <Navbar dark expand="md">
-      <NavbarBrand className="mr-auto" >{''}</NavbarBrand>
+    <nav className="navbar" style={{"position":"sticky","top":"0px" , "z-index":"100000",backgroundColor:"rgba(0,0,50,.3)"}}>
+      <Navbar dark expand="md" style={{padding: "0"}} className={classes.navParent}>
+      <NavbarBrand className="mr-auto">{''}</NavbarBrand>
       <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
-          <Nav navbar style={{marginBottom: "-10px" }}>
+          <Nav navbar className={classes.navbar} style={{backgroundColor: "lightsteelblue",}}>
             <NavItem>
-              <Navlink link="/" linktext="Home" /> 
+              <Navlink link="/" linktext="Home"/> 
             </NavItem>
             <NavItem>
-              <Navlink link="/services" linktext="Services" />
+              <Navlink link="/services" linktext="Services"/>
             </NavItem>
             <NavItem>
-              <Navlink link="/courses" linktext="Courses" />
+              <Navlink link="/languages" linktext="Languages"/>
             </NavItem>
             <NavItem>
-              <Navlink link="/about" linktext="About us" />
+              <Navlink link="/tellus" linktext="Tell us" />
             </NavItem>
-            
-            {e}
+            <NavItem>
+              {e}
+            </NavItem>
           </Nav>
         </Collapse>
         </Navbar>
