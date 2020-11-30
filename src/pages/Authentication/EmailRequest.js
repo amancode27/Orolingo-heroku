@@ -28,7 +28,7 @@ const EmailRequest = (props) =>{
         e = <Alert>An email has been sent to your email id. Use it to reset your password.</Alert>
     }
     else if(error){
-        e = <Alert>Please create an account first! <a href = "http://localhost:8000/signup">Click</a> here to sign up!</Alert>
+        e = <Alert>Please create an account first! <a href = "https://orolingo-staging.herokuapp.com/signup">Click</a> here to sign up!</Alert>
     }
 
     const formstyle = {

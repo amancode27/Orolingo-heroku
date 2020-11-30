@@ -203,7 +203,7 @@ const LoginForm = (props) =>{
             </div>
             <Grid container>
               <Grid item xs style={{marginTop:"10px"}}>
-                <Link href="http://localhost:8000/password-reset/" variant="body1">
+                <Link href="https://orolingo-staging.herokuapp.com/password-reset/" variant="body1">
                   Forgot password?
                 </Link>
               </Grid>

@@ -46,7 +46,7 @@ const PasswordReset = (props) => {
 
     let e = <div></div>;
     if(success){
-        e = <Alert color = "success">Password reset successfully! <a href = "http://localhost:8000/login">Click</a> here to login!</Alert>
+        e = <Alert color = "success">Password reset successfully! <a href = "https://orolingo-staging.herokuapp.com/login">Click</a> here to login!</Alert>
     }
     else if(error){
         e = <Alert color = "danger">The token is already used! Please try again!</Alert>
